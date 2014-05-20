@@ -3,7 +3,7 @@ using ApiCheck.Result.Difference;
 
 namespace ApiCheck.Result
 {
-  internal interface IComparerResult
+  public interface IComparerResult
   {
     int GetAllCount(Severity severity);
     ResultContext ResultContext { get; }

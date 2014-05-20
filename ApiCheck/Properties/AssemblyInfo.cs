@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("ApiCheck")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("ise GmbH")]
+[assembly: AssemblyCompany("ise Individuelle Software-Entwicklung GmbH")]
 [assembly: AssemblyProduct("ApiCheck")]
 [assembly: AssemblyCopyright("Copyright ©  2014")]
 [assembly: AssemblyTrademark("")]

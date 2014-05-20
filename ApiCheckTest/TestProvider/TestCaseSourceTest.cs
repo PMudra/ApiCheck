@@ -1,4 +1,4 @@
-using ApiCheck.TestProvider;
+using ApiCheckNUnit;
 using NUnit.Framework;
 
 namespace ApiCheckTest.TestProvider

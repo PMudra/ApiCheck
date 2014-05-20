@@ -1,6 +1,6 @@
 ﻿namespace ApiCheck.Result
 {
-  internal enum ResultContext
+  public enum ResultContext
   {
     Assembly,
     Class,

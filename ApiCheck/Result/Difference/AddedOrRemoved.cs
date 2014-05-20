@@ -2,7 +2,7 @@
 
 namespace ApiCheck.Result.Difference
 {
-  internal class AddedOrRemoved : Difference
+  public class AddedOrRemoved : Difference
   {
     private readonly string _itemName;
     private readonly ResultContext _resultContext;

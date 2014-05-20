@@ -2,7 +2,7 @@
 
 namespace ApiCheck.Result.Difference
 {
-  internal class Changed<T> : Difference
+  public class Changed<T> : Difference
   {
     private readonly string _propertyName;
     private readonly T _referenceValue;

@@ -1,6 +1,6 @@
-﻿using System;
+using System;
 
-namespace ApiCheck.TestProvider
+namespace ApiCheckNUnit
 {
   [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
   public class ApiTestAttribute : Attribute

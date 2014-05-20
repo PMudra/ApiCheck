@@ -78,6 +78,10 @@
       <Project>{f9c40e89-d2db-40a6-914b-f1b6a39f32a0}</Project>
       <Name>ApiCheckConsole</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ApiCheckNUnit\ApiCheckNUnit.csproj">
+      <Project>{2581B896-3388-4188-BF02-2A463227646F}</Project>
+      <Name>ApiCheckNUnit</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ApiCheck\ApiCheck.csproj">
       <Project>{f49950b4-e611-4270-a3af-372b58238ce4}</Project>
       <Name>ApiCheck</Name>

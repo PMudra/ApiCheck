@@ -1,14 +1,15 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using ApiCheck;
 using ApiCheck.Loader;
-using ApiCheck.Report;
 using ApiCheck.Result;
 using ApiCheck.Result.Difference;
+using ApiCheckNUnit.Writer;
 using NUnit.Framework;
 
-namespace ApiCheck.TestProvider
+namespace ApiCheckNUnit
 {
   [TestFixture]
   public abstract class ApiTest

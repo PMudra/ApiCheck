@@ -1,6 +1,6 @@
 ﻿namespace ApiCheck.Result.Difference
 {
-  internal enum Severity
+  public enum Severity
   {
     Hint,
     Warning,

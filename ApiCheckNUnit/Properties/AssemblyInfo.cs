@@ -1,14 +1,15 @@
 ﻿using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("ApiCheckTest")]
+[assembly: AssemblyTitle("ApiCheckNUnit")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("ise Individuelle Software-Entwicklung GmbH")]
-[assembly: AssemblyProduct("ApiCheckTest")]
+[assembly: AssemblyProduct("ApiCheckNUnit")]
 [assembly: AssemblyCopyright("Copyright ©  2014")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -19,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("2d7e2a0d-4013-45a2-bc90-ebc6b305c347")]
+[assembly: Guid("485dbf20-2e47-42d2-89bd-e845eb115fcc")]
 
 // Version information for an assembly consists of the following four values:
 //

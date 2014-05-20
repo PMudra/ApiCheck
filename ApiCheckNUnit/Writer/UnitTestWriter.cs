@@ -1,7 +1,7 @@
-﻿using System;
+using System;
 using System.Text;
 
-namespace ApiCheck.Report
+namespace ApiCheckNUnit.Writer
 {
   internal class UnitTestWriter : IWriter
   {

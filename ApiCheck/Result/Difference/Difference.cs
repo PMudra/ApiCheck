@@ -1,6 +1,6 @@
 ﻿namespace ApiCheck.Result.Difference
 {
-  internal abstract class Difference
+  public abstract class Difference
   {
     private readonly Severity _severity;
 

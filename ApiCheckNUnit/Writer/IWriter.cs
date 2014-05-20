@@ -1,4 +1,4 @@
-﻿namespace ApiCheck.Report
+namespace ApiCheckNUnit.Writer
 {
   internal interface IWriter
   {

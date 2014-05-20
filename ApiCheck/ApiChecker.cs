@@ -52,7 +52,7 @@ namespace ApiCheck
       return _comparerResult.GetAllCount(Severity.Error) + _comparerResult.GetAllCount(Severity.Warning);
     }
 
-    internal IComparerResult ComparerResult
+    public IComparerResult ComparerResult
     {
       get { return _comparerResult; }
     }
