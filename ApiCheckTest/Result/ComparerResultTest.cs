@@ -4,7 +4,6 @@ using NUnit.Framework;
 
 namespace ApiCheckTest.Result
 {
-  [TestFixture]
   class ComparerResultTest
   {
     [Test]

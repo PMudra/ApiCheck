@@ -11,11 +11,9 @@ using NUnit.Framework;
 
 namespace ApiCheckNUnit
 {
-  [TestFixture]
   public abstract class ApiTest
   {
-    [Test]
-    [TestCaseSource("TestCases")]
+    [Test, TestCaseSource("TestCases")]
     public void ApiElementTest(bool success, string message)
     {
       if (success)

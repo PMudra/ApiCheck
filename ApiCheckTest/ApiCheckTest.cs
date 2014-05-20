@@ -7,7 +7,6 @@ using NUnit.Framework;
 
 namespace ApiCheckTest
 {
-  [TestFixture]
   class ApiCheckTest
   {
     [Test]

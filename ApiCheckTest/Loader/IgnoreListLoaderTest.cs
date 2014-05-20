@@ -6,7 +6,6 @@ using NUnit.Framework;
 
 namespace ApiCheckTest.Loader
 {
-  [TestFixture]
   class IgnoreListLoaderTest
   {
     [Test]

@@ -8,7 +8,6 @@ using NUnit.Framework;
 
 namespace ApiCheckTest.Report
 {
-  [TestFixture]
   class XmlGeneratorTest
   {
     private const string ChangedElement = "ChangedElement";

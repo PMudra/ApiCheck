@@ -4,7 +4,6 @@ using NUnit.Framework;
 
 namespace ApiCheckTest.Comparer
 {
-  [TestFixture]
   class PairListTest
   {
     [Test]

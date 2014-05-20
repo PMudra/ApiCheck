@@ -5,7 +5,6 @@ using ApiCheck.Utility;
 
 namespace ApiCheckTest.Utility
 {
-  [TestFixture]
   class TypeExtensionsTest
   {
     [Test]

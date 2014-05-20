@@ -5,7 +5,6 @@ using NUnit.Framework;
 
 namespace ApiCheckTest.Report
 {
-  [TestFixture]
   class XmlTransformerTest
   {
     [Test]

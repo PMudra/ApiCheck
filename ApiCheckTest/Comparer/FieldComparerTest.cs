@@ -8,7 +8,6 @@ using NUnit.Framework;
 
 namespace ApiCheckTest.Comparer
 {
-  [TestFixture]
   class FieldComparerTest
   {
     [Test]

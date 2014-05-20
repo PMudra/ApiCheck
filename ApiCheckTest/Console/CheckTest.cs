@@ -5,7 +5,6 @@ using NUnit.Framework;
 
 namespace ApiCheckTest.Console
 {
-  [TestFixture]
   class CheckTest
   {
     [Test]
