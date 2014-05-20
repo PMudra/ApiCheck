@@ -5,39 +5,48 @@ RestorePackages()
 
 // Directories
 let buildDir  = @".\build\"
-let testDir   = @".\test\"
 let deployDir = @".\deploy\"
+
+let version = buildVersion
 
 // Targets
 Target "Clean" (fun _ ->
-    CleanDirs [buildDir; testDir; deployDir]
+    CleanDirs [buildDir; deployDir]
 )
 
 Target "Compile" (fun _ ->
-    !! @"ApiCheck\**\*.csproj" ++ @"ApiCheckConsole\**\*.csproj"
-    |> MSBuildRelease buildDir "Build"
-    |> Log "Compile-Output: "
+    !! @"**\ApiCheck.csproj"
+    ++ @"**\ApiCheckConsole.csproj"
+    ++ @"**\ApiCheckNUnit.csproj"
+        |> MSBuildRelease buildDir "Build"
+        |> Log "Compile-Output: "
 )
 
 Target "CompileTest" (fun _ ->
-    !! @"ApiCheckTest\**\*.csproj"
-    |> MSBuildDebug testDir "Build"
+    !! @"**\ApiCheckTest.csproj"
+    |> MSBuildDebug buildDir "Build"
     |> Log "CompileTest-Output: "
 )
 
 Target "RunTest" (fun _ ->
-    !! (testDir + @"\*Test.dll")
+    !! (buildDir + @"*Test.dll")
     |> NUnit (fun p ->
         {p with
             DisableShadowCopy = true;
-            OutputFile = testDir + @"TestResults.xml"
+            OutputFile = buildDir + @"TestResults.xml"
             ExcludeCategory = "ApiTest"})
+)
+
+Target "Zip" (fun _ ->
+    !! (buildDir + "**\*")
+    |> Zip buildDir (deployDir + "ApiCheck." + version + ".zip")
 )
 
 // Dependencies
 "Clean"
-  ==> "Compile"
-  ==> "CompileTest"
-  ==> "RunTest"
+    ==> "Compile"
+    ==> "CompileTest"
+    ==> "RunTest"
+    ==> "Zip"
 
-RunTargetOrDefault "RunTest"
+RunTargetOrDefault "Zip"

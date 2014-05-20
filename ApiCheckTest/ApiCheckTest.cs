@@ -67,13 +67,14 @@ namespace ApiCheckTest
       Stream xmlReport = new MemoryStream();
       Assembly newAssembly = Assembly.ReflectionOnlyLoadFrom(@"TestProject\Version2\ApiCheckTestProject.dll");
       Assembly referenceAssembly = Assembly.ReflectionOnlyLoadFrom(@"TestProject\Version1\ApiCheckTestProject.dll");
+      int logCount = 0;
 
       int returnValue = -1;
       Assert.DoesNotThrow(
         () =>
         returnValue = ApiChecker.CreateInstance(referenceAssembly, newAssembly)
-                  .WithDetailLogging(s => System.Console.WriteLine("[Detail] " + s))
-                  .WithInfoLogging(s => System.Console.WriteLine("[Info] " + s))
+                  .WithDetailLogging(s => logCount++)
+                  .WithInfoLogging(s => logCount++)
                   .WithHtmlReport(htmlReport)
                   .WithXmlReport(xmlReport)
                   .Build()
@@ -81,6 +82,7 @@ namespace ApiCheckTest
 
       Assert.Greater(htmlReport.Length, 0);
       Assert.Greater(xmlReport.Length, 0);
+      Assert.Greater(logCount, 0);
       Assert.AreEqual(62, returnValue);
     }
   }
