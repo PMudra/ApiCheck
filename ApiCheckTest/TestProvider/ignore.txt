@@ -1,0 +1,2 @@
+﻿ApiCheckTestProject.AddedOrRemoved.ParentClass
+ApiCheckTestProject.BaseChanged.MyBase`1

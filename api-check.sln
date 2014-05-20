@@ -1,0 +1,66 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiCheckTest", "ApiCheckTest\ApiCheckTest.csproj", "{40720D6A-FA8A-48C5-AF17-9DC65666947D}"
+	ProjectSection(ProjectDependencies) = postProject
+		{F49950B4-E611-4270-A3AF-372B58238CE4} = {F49950B4-E611-4270-A3AF-372B58238CE4}
+		{F36CEDC6-9583-4FEB-B7FE-016D0131604A} = {F36CEDC6-9583-4FEB-B7FE-016D0131604A}
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{3459CD24-DC82-4C2E-827B-E2F4C765EB65}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\NuGet.Config = .nuget\NuGet.Config
+		.nuget\NuGet.exe = .nuget\NuGet.exe
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiCheck", "ApiCheck\ApiCheck.csproj", "{F49950B4-E611-4270-A3AF-372B58238CE4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiCheckTestProject", "ApiCheckTestProject\ApiCheckTestProject.csproj", "{F36CEDC6-9583-4FEB-B7FE-016D0131604A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiCheckConsole", "ApiCheckConsole\ApiCheckConsole.csproj", "{F9C40E89-D2DB-40A6-914B-F1B6A39F32A0}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+		Version1|Any CPU = Version1|Any CPU
+		Version2|Any CPU = Version2|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{40720D6A-FA8A-48C5-AF17-9DC65666947D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{40720D6A-FA8A-48C5-AF17-9DC65666947D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{40720D6A-FA8A-48C5-AF17-9DC65666947D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{40720D6A-FA8A-48C5-AF17-9DC65666947D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{40720D6A-FA8A-48C5-AF17-9DC65666947D}.Version1|Any CPU.ActiveCfg = Debug|Any CPU
+		{40720D6A-FA8A-48C5-AF17-9DC65666947D}.Version1|Any CPU.Build.0 = Debug|Any CPU
+		{40720D6A-FA8A-48C5-AF17-9DC65666947D}.Version2|Any CPU.ActiveCfg = Debug|Any CPU
+		{40720D6A-FA8A-48C5-AF17-9DC65666947D}.Version2|Any CPU.Build.0 = Debug|Any CPU
+		{F49950B4-E611-4270-A3AF-372B58238CE4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F49950B4-E611-4270-A3AF-372B58238CE4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F49950B4-E611-4270-A3AF-372B58238CE4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F49950B4-E611-4270-A3AF-372B58238CE4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F49950B4-E611-4270-A3AF-372B58238CE4}.Version1|Any CPU.ActiveCfg = Debug|Any CPU
+		{F49950B4-E611-4270-A3AF-372B58238CE4}.Version1|Any CPU.Build.0 = Debug|Any CPU
+		{F49950B4-E611-4270-A3AF-372B58238CE4}.Version2|Any CPU.ActiveCfg = Debug|Any CPU
+		{F49950B4-E611-4270-A3AF-372B58238CE4}.Version2|Any CPU.Build.0 = Debug|Any CPU
+		{F36CEDC6-9583-4FEB-B7FE-016D0131604A}.Debug|Any CPU.ActiveCfg = Version1|Any CPU
+		{F36CEDC6-9583-4FEB-B7FE-016D0131604A}.Debug|Any CPU.Build.0 = Version1|Any CPU
+		{F36CEDC6-9583-4FEB-B7FE-016D0131604A}.Release|Any CPU.ActiveCfg = Version1|Any CPU
+		{F36CEDC6-9583-4FEB-B7FE-016D0131604A}.Release|Any CPU.Build.0 = Version1|Any CPU
+		{F36CEDC6-9583-4FEB-B7FE-016D0131604A}.Version1|Any CPU.ActiveCfg = Version1|Any CPU
+		{F36CEDC6-9583-4FEB-B7FE-016D0131604A}.Version1|Any CPU.Build.0 = Version1|Any CPU
+		{F36CEDC6-9583-4FEB-B7FE-016D0131604A}.Version2|Any CPU.ActiveCfg = Version2|Any CPU
+		{F36CEDC6-9583-4FEB-B7FE-016D0131604A}.Version2|Any CPU.Build.0 = Version2|Any CPU
+		{F9C40E89-D2DB-40A6-914B-F1B6A39F32A0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F9C40E89-D2DB-40A6-914B-F1B6A39F32A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F9C40E89-D2DB-40A6-914B-F1B6A39F32A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F9C40E89-D2DB-40A6-914B-F1B6A39F32A0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F9C40E89-D2DB-40A6-914B-F1B6A39F32A0}.Version1|Any CPU.ActiveCfg = Debug|Any CPU
+		{F9C40E89-D2DB-40A6-914B-F1B6A39F32A0}.Version1|Any CPU.Build.0 = Debug|Any CPU
+		{F9C40E89-D2DB-40A6-914B-F1B6A39F32A0}.Version2|Any CPU.ActiveCfg = Debug|Any CPU
+		{F9C40E89-D2DB-40A6-914B-F1B6A39F32A0}.Version2|Any CPU.Build.0 = Debug|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
