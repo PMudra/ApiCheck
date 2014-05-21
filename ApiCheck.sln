@@ -12,6 +12,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{2551DCB9-50D0-4284-A1D3-6E07763AAB16}"
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
+		ApiCheck.nuspec = ApiCheck.nuspec
 		build.bat = build.bat
 		build.fsx = build.fsx
 		LICENSE.txt = LICENSE.txt
