@@ -6,6 +6,7 @@ RestorePackages()
 
 let buildDir  = @".\build\"
 let deployDir = @".\deploy\"
+let packagingDir = @".\packaging\"
 
 let buildVersion = if isLocalBuild then "0" else buildVersion
 let version = "1.0." + buildVersion
@@ -21,7 +22,7 @@ let packages =
                                            "NUnit", "2.6.3"]]
 
 Target "Clean" (fun _ ->
-    CleanDirs [buildDir; deployDir]
+    CleanDirs [buildDir; deployDir; packagingDir]
 )
 
 Target "SetVersion" (fun _ ->
@@ -60,10 +61,9 @@ Target "Zip" (fun _ ->
 
 Target "NuGet" (fun _ ->
     for package, description, summary, dependencies in packages do
-        let packagingDir = @".\packaging\"
         let libDir = packagingDir @@ "lib"
         let toolDir = packagingDir @@ "tools"
-        CleanDirs [packagingDir; libDir; toolDir]
+        CleanDirs [libDir; toolDir]
         !! (buildDir @@ "*.txt") |> CopyFiles packagingDir
         match package with
         | "ApiCheck" ->
