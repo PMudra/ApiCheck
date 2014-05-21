@@ -32,9 +32,8 @@ Target "SetVersion" (fun _ ->
 )
 
 Target "Compile" (fun _ ->
-    !! @"**\ApiCheck.csproj"
-    ++ @"**\ApiCheck.Console.csproj"
-    ++ @"**\ApiCheck.NUnit.csproj"
+    !! @"**\ApiCheck.Console.csproj"
+    //++ @"**\ApiCheck.NUnit.csproj"
     |> MSBuildRelease buildDir "Build"
     |> Log "Compile-Output: "
 )
