@@ -15,5 +15,5 @@ using System.Runtime.InteropServices;
 
 [assembly: Guid("a0327a29-813c-4517-8a1f-a7f3b71aa860")]
 
-[assembly: InternalsVisibleTo("ApiCheckTest")]
+[assembly: InternalsVisibleTo("ApiCheck.Test")]
 [assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]

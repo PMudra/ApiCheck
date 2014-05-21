@@ -7,7 +7,17 @@ RestorePackages()
 let buildDir  = @".\build\"
 let deployDir = @".\deploy\"
 
+let buildVersion = if isLocalBuild then "0" else buildVersion
 let version = "1.0." + buildVersion
+
+let description = "desc"
+let authors = ["authors"]
+let project = "project"
+let copyright = "(c)"
+let releaseNotes = "releaseNotes"
+let summary = "summary"
+let title = "title"
+let tags = "tags"
 
 Target "Clean" (fun _ ->
     CleanDirs [buildDir; deployDir]
@@ -47,11 +57,42 @@ Target "Zip" (fun _ ->
     |> Zip buildDir (deployDir + "ApiCheck." + version + ".zip")
 )
 
+Target "NuGet" (fun _ ->
+    let packagingDir = @".\packaging\"
+    let libDir = packagingDir @@ "lib"
+    CleanDirs [packagingDir; libDir]
+
+    Copy libDir [(buildDir @@ "ApiCheck.dll")]
+    !!(buildDir + "*.txt")
+    |> Copy packagingDir
+
+    NuGet (fun p ->
+        {p with
+            WorkingDir = packagingDir
+            OutputPath = deployDir
+            Description = description
+            Publish = false
+            Version = version
+            Authors = authors
+            Project = project
+            Copyright = copyright
+            ReleaseNotes = releaseNotes
+            Summary = summary
+            Title = title
+            Tags = tags
+            })
+            "ApiCheck.nuspec"
+)
+
+Target "Default" DoNothing
+
 "Clean"
     ==> "SetVersion"
     ==> "Compile"
     ==> "CompileTest"
     ==> "RunTest"
     ==> "Zip"
+    ==> "NuGet"
+    ==> "Default"
 
-RunTargetOrDefault "Zip"
+RunTargetOrDefault "Default"

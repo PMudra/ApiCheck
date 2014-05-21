@@ -15,7 +15,7 @@ build/
 bld/
 [Bb]in/
 [Oo]bj/
-test/
+packaging/
 deploy/
 
 # MSTest test Results
