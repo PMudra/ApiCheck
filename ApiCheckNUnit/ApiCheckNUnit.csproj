@@ -40,6 +40,9 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\SolutionInfo.cs">
+      <Link>SolutionInfo.cs</Link>
+    </Compile>
     <Compile Include="ApiTest.cs" />
     <Compile Include="ApiTestAttribute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

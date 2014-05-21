@@ -1,17 +1,22 @@
 #r @"packages\FAKE\tools\FakeLib.dll"
 open Fake
+open Fake.AssemblyInfoFile
 
 RestorePackages()
 
-// Directories
 let buildDir  = @".\build\"
 let deployDir = @".\deploy\"
 
-let version = buildVersion
+let version = "1.0." + buildVersion
 
-// Targets
 Target "Clean" (fun _ ->
     CleanDirs [buildDir; deployDir]
+)
+
+Target "SetVersion" (fun _ ->
+    CreateCSharpAssemblyInfo "SolutionInfo.cs"
+        [Attribute.FileVersion version
+         Attribute.Version version]
 )
 
 Target "Compile" (fun _ ->
@@ -42,8 +47,8 @@ Target "Zip" (fun _ ->
     |> Zip buildDir (deployDir + "ApiCheck." + version + ".zip")
 )
 
-// Dependencies
 "Clean"
+    ==> "SetVersion"
     ==> "Compile"
     ==> "CompileTest"
     ==> "RunTest"

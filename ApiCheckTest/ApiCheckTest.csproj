@@ -45,6 +45,9 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\SolutionInfo.cs">
+      <Link>SolutionInfo.cs</Link>
+    </Compile>
     <Compile Include="ApiCheckTest.cs" />
     <Compile Include="Builder\ApiBuilder.cs" />
     <Compile Include="Builder\ApiBuilderHelper.cs" />
