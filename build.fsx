@@ -13,13 +13,16 @@ let version = "1.0." + buildVersion
 
 let authors = ["ise Individuelle Software-Entwicklung GmbH"]
 let releaseNotes = "Initial Release."
-let tags = "TODO"
+let tags = "ApiCheck Assembly Comparer NUnit Different Version Build Integration Compatibility Api Test"
+
+let globalDescription = "A library comparing two versions of a .NET assembly for compatibility."
 
 let packages =
-    ["ApiCheck", "desc", "summary", []
-     "ApiCheck.Console", "desc", "summary", []
-     "ApiCheck.NUnit", "desc", "summary", ["ApiCheck", version
-                                           "NUnit", "2.6.3"]]
+    ["ApiCheck", globalDescription, []
+     "ApiCheck.Console", globalDescription + " Console application.", []
+     "ApiCheck.NUnit", globalDescription + " NUnit integration.",
+     ["ApiCheck", version
+      "NUnit", "2.6.3"]]
 
 Target "Clean" (fun _ ->
     CleanDirs [buildDir; deployDir; packagingDir]
@@ -58,7 +61,7 @@ Target "Zip" (fun _ ->
 )
 
 Target "NuGet" (fun _ ->
-    for package, description, summary, dependencies in packages do
+    for package, description, dependencies in packages do
         let libDir = packagingDir @@ "lib"
         let toolDir = packagingDir @@ "tools"
         CleanDirs [libDir; toolDir]
@@ -86,7 +89,6 @@ Target "NuGet" (fun _ ->
                 Authors = authors
                 Project = package
                 ReleaseNotes = releaseNotes
-                Summary = summary
                 Tags = tags
                 Dependencies = dependencies
                 })

@@ -9,7 +9,6 @@
     <!--<iconUrl>http://ICON_URL_HERE_OR_DELETE_THIS_LINE</iconUrl>-->
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>@description@</description>
-    <summary>@summary@</summary>
     <releaseNotes>@releaseNotes@</releaseNotes>
     <tags>@tags@</tags>
     @dependencies@
