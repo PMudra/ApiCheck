@@ -32,8 +32,7 @@ Target "SetVersion" (fun _ ->
 )
 
 Target "Compile" (fun _ ->
-    !! @"**\ApiCheck.Console.csproj"
-    //++ @"**\ApiCheck.NUnit.csproj"
+    !! @"ApiCheck.sln"
     |> MSBuildRelease buildDir "Build"
     |> Log "Compile-Output: "
 )
@@ -56,9 +55,6 @@ Target "RunTest" (fun _ ->
 Target "Zip" (fun _ ->
     !! (buildDir @@ "**\*")
     |> Zip buildDir (deployDir @@ "ApiCheck." + version + ".zip")
-
-    !! @"C:\Program Files (x86)\MSBuild\12.0\**\*"
-    |> Zip @"C:\" (deployDir @@ "MSBuild.zip")
 )
 
 Target "NuGet" (fun _ ->
@@ -69,15 +65,12 @@ Target "NuGet" (fun _ ->
         !! (buildDir @@ "*.txt") |> CopyFiles packagingDir
         match package with
         | "ApiCheck" ->
-            DeleteDir toolDir
             CopyFile libDir (buildDir @@ "ApiCheck.dll")
             CopyFile libDir (buildDir @@ "ApiCheck.XML")
         | "ApiCheck.NUnit" ->
-            DeleteDir toolDir
             CopyFile libDir (buildDir @@ "ApiCheck.NUnit.dll")
             CopyFile libDir (buildDir @@ "ApiCheck.NUnit.XML")
         | "ApiCheck.Console" ->
-            DeleteDir libDir
             CopyFile toolDir (buildDir @@ "ApiCheck.dll")
             CopyFile toolDir (buildDir @@ "ApiCheck.Console.exe")
             CopyFile toolDir (buildDir @@ "ApiCheck.Console.exe.config")
