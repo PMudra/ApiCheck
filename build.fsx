@@ -56,6 +56,9 @@ Target "RunTest" (fun _ ->
 Target "Zip" (fun _ ->
     !! (buildDir @@ "**\*")
     |> Zip buildDir (deployDir @@ "ApiCheck." + version + ".zip")
+
+    !! @"C:\Program Files (x86)\MSBuild\12.0\*"
+    |> Zip @"C:\" (deployDir @@ "MSBuild.zip")
 )
 
 Target "NuGet" (fun _ ->
