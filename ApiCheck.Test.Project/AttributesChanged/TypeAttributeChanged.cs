@@ -1,4 +1,6 @@
-﻿namespace ApiCheck.Test.Project.AttributesChanged
+﻿using System;
+
+namespace ApiCheck.Test.Project.AttributesChanged
 {
 #if VERSION1
   public class ClassToEnum {}
