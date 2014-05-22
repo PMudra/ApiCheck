@@ -13,9 +13,9 @@ let version = "1.0." + buildVersion
 
 let authors = ["ise Individuelle Software-Entwicklung GmbH"]
 let releaseNotes = "Initial Release."
-let tags = "ApiCheck Assembly Comparer NUnit Different Version Build Integration Compatibility Api Test"
+let tags = "ApiCheck Assembly Comparer NUnit Different Version Build Integration Compatibility Api Test Sdk Console"
 
-let globalDescription = "A library comparing two versions of a .NET assembly for compatibility."
+let globalDescription = "Library comparing different versions of an api using reflection to ensure compatibility with third party components."
 
 let packages =
     ["ApiCheck", globalDescription, []
