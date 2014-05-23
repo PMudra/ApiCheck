@@ -53,7 +53,7 @@ For more information run ```ApiCheck.Console.exe --help```
 Add a new class to your project like this:
 ```csharp
 using ApiCheck.NUnit;
-namespace ApiCheck.Test.TestProvider
+namespace MyNamespace
 {
     [ApiTest(@"Version1\ApiCheckTestProject.dll", @"Version2\ApiCheckTestProject.dll", Category = "ApiTest", IgnoreListPath = @"ignoreList.txt")]
     [ApiTest(@"Version1\ApiCheckTestProject.Extension.dll", @"Version2\ApiCheckTestProject.Extension.dll")]
