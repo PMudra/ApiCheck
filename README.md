@@ -56,7 +56,7 @@ using ApiCheck.NUnit;
 namespace MyNamespace
 {
     [ApiTest(@"Version1\ApiCheckTestProject.dll", @"Version2\ApiCheckTestProject.dll", Category = "ApiTest", IgnoreListPath = @"ignoreList.txt")]
-    [ApiTest(@"Version1\ApiCheckTestProject.Extension.dll", @"Version2\ApiCheckTestProject.Extension.dll")]
+    [ApiTest(@"Version1\ApiCheckTestProject.Extension.dll", @"Version2\ApiCheckTestProject.Extension.dll", Explicit = true)]
     public class ComparingApiTest : ApiTest
     {
     }

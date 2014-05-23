@@ -50,7 +50,7 @@ namespace ApiCheck.NUnit
                                                             .Build();
           apiChecker.CheckApi();
           IList<string> ignoreList = IgnoreListLoader.LoadIgnoreList(GetReadStream(apiTestAttribute.IgnoreListPath));
-          yield return new ApiTestData(apiChecker.ComparerResult, apiTestAttribute.Category, ignoreList);
+          yield return new ApiTestData(apiChecker.ComparerResult, apiTestAttribute.Category, ignoreList, apiTestAttribute.Explicit);
         }
       }
     }
@@ -65,7 +65,7 @@ namespace ApiCheck.NUnit
       List<ITestCaseData> testCaseData = new List<ITestCaseData>();
       IEnumerable<ApiTestData> apiTestData = results.ToList();
       testCaseData.AddRange(apiTestData.Select(GenerateTestCase));
-      testCaseData.AddRange(apiTestData.SelectMany(result => result.ComparerResult.ComparerResults.Select(r => GenerateTestCase(new ApiTestData(r, result.Category, result.IgnoreList)))));
+      testCaseData.AddRange(apiTestData.SelectMany(result => result.ComparerResult.ComparerResults.Select(r => GenerateTestCase(new ApiTestData(r, result.Category, result.IgnoreList, result.Explicit)))));
       return testCaseData;
     }
 
@@ -77,6 +77,10 @@ namespace ApiCheck.NUnit
       if (apiTestData.IgnoreList.Contains(comparerResult.Name))
       {
         testCaseData.Ignore();
+      }
+      if (apiTestData.Explicit)
+      {
+        testCaseData.MakeExplicit();
       }
       return testCaseData;
     }
@@ -104,12 +108,14 @@ namespace ApiCheck.NUnit
       private readonly IComparerResult _comparerResult;
       private readonly string _category;
       private readonly IList<string> _ignoreList;
+      private readonly bool _explicit;
 
-      public ApiTestData(IComparerResult comparerResult, string category, IList<string> ignoreList)
+      public ApiTestData(IComparerResult comparerResult, string category, IList<string> ignoreList, bool @explicit)
       {
         _comparerResult = comparerResult;
         _category = category;
         _ignoreList = ignoreList;
+        _explicit = @explicit;
       }
 
       public IComparerResult ComparerResult
@@ -120,6 +126,11 @@ namespace ApiCheck.NUnit
       public string Category
       {
         get { return _category; }
+      }
+
+      public bool Explicit
+      {
+        get { return _explicit; }
       }
 
       public IList<string> IgnoreList
