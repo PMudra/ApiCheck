@@ -20,7 +20,7 @@ namespace ApiCheck.Console
     [Option('i', "ignore", HelpText = "A relative or absolute path for a text file containing the names of the types to ignore.")]
     public string IgnorePath { get; set; }
 
-    [Option('v', "verbose", HelpText = "Runs comparer with log and prints information to the console.")]
+    [Option('v', "verbose", HelpText = "Runs comparer with logging and prints information to the console.")]
     public bool Verbose { get; set; }
 
     [HelpOption]
@@ -31,7 +31,7 @@ namespace ApiCheck.Console
         AdditionalNewLineAfterOption = true,
         AddDashesToOption = true
       };
-      helpText.AddPreOptionsLine("Usage: ApiCheckConsole.exe -r <reference assembly> -n <new assembly> [-x <xml report>] [-h <html report>] [-i <ignore file>] [-v]");
+      helpText.AddPreOptionsLine("Usage: ApiCheck.Console.exe -r <reference assembly> -n <new assembly> [-x <xml report>] [-h <html report>] [-i <ignore file>] [-v]");
       helpText.AddOptions(this);
       return helpText;
     }
