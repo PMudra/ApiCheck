@@ -51,8 +51,7 @@ Target "RunTest" (fun _ ->
     |> NUnit (fun p ->
         {p with
             DisableShadowCopy = true;
-            OutputFile = buildDir @@ @"TestResults.xml"
-            ExcludeCategory = "ApiTest"})
+            OutputFile = buildDir @@ @"TestResults.xml"})
 )
 
 Target "Zip" (fun _ ->
