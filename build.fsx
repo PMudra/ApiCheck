@@ -29,7 +29,7 @@ Target "Clean" (fun _ ->
 )
 
 Target "SetVersion" (fun _ ->
-    CreateCSharpAssemblyInfo "SolutionInfo.cs"
+    CreateCSharpAssemblyInfo @".\SolutionInfo.cs"
         [Attribute.FileVersion version
          Attribute.Version version]
 )
