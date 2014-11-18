@@ -9,6 +9,7 @@ ApiCheck is a library that compares different versions of an API using reflectio
 
 ##CI Build
 [![Build status](https://ci.appveyor.com/api/projects/status/b4uq1f6d2n91c8fv)](https://ci.appveyor.com/project/PMudra/apicheck)
+[![NuGet status](http://img.shields.io/nuget/v/ApiCheck.svg)](http://www.nuget.org/packages/ApiCheck/)
 ##Installing via NuGet
 Installing the library to your project (referencing ApiCheck.dll):
 ```
