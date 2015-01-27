@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using ApiCheck.Comparer;
+﻿using ApiCheck.Comparer;
 using ApiCheck.Result;
 using ApiCheck.Test.Builder;
 using NUnit.Framework;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 
 namespace ApiCheck.Test.Comparer
 {

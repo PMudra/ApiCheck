@@ -1,6 +1,6 @@
-﻿using System.Linq;
-using ApiCheck.Comparer;
+﻿using ApiCheck.Comparer;
 using NUnit.Framework;
+using System.Linq;
 
 namespace ApiCheck.Test.Comparer
 {

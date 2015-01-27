@@ -1,6 +1,6 @@
-﻿using System.Reflection;
-using ApiCheck.Comparer;
+﻿using ApiCheck.Comparer;
 using Moq;
+using System.Reflection;
 
 namespace ApiCheck.Test.Comparer
 {

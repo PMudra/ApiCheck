@@ -1,12 +1,12 @@
-﻿using System;
+﻿using ApiCheck.Comparer;
+using ApiCheck.Report;
+using ApiCheck.Result;
+using ApiCheck.Result.Difference;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Xml.Linq;
-using ApiCheck.Comparer;
-using ApiCheck.Report;
-using ApiCheck.Result;
-using ApiCheck.Result.Difference;
 
 namespace ApiCheck
 {

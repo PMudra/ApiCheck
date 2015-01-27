@@ -1,12 +1,12 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using ApiCheck.Loader;
 using ApiCheck.NUnit.Writer;
 using ApiCheck.Result;
 using ApiCheck.Result.Difference;
 using NUnit.Framework;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace ApiCheck.NUnit
 {

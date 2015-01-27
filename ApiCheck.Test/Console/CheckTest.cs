@@ -1,7 +1,7 @@
-﻿using System;
-using System.IO;
-using ApiCheck.Console;
+﻿using ApiCheck.Console;
 using NUnit.Framework;
+using System;
+using System.IO;
 
 namespace ApiCheck.Test.Console
 {

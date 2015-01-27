@@ -1,12 +1,12 @@
-﻿using System.Collections.Specialized;
-using System.ComponentModel;
-using System.Reflection;
-using ApiCheck.Comparer;
+﻿using ApiCheck.Comparer;
 using ApiCheck.Result;
 using ApiCheck.Result.Difference;
 using ApiCheck.Test.Builder;
 using Moq;
 using NUnit.Framework;
+using System.Collections.Specialized;
+using System.ComponentModel;
+using System.Reflection;
 
 namespace ApiCheck.Test.Comparer
 {

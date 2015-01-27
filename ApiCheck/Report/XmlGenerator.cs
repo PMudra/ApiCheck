@@ -1,8 +1,8 @@
-﻿using System;
+﻿using ApiCheck.Result;
+using ApiCheck.Result.Difference;
+using System;
 using System.Linq;
 using System.Xml.Linq;
-using ApiCheck.Result;
-using ApiCheck.Result.Difference;
 
 namespace ApiCheck.Report
 {

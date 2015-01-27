@@ -1,7 +1,7 @@
-﻿using System.IO;
-using System.Xml.Linq;
-using ApiCheck.Report;
+﻿using ApiCheck.Report;
 using NUnit.Framework;
+using System.IO;
+using System.Xml.Linq;
 
 namespace ApiCheck.Test.Report
 {

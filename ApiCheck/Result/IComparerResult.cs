@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using ApiCheck.Result.Difference;
+﻿using ApiCheck.Result.Difference;
+using System.Collections.Generic;
 
 namespace ApiCheck.Result
 {

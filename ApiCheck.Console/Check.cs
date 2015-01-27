@@ -1,8 +1,8 @@
-﻿using System;
+﻿using ApiCheck.Loader;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using ApiCheck.Loader;
 
 namespace ApiCheck.Console
 {

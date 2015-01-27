@@ -1,6 +1,6 @@
-﻿using System;
+﻿using ApiCheck.Result;
+using System;
 using System.Reflection;
-using ApiCheck.Result;
 
 namespace ApiCheck.Comparer
 {

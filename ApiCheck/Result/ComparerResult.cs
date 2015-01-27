@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using ApiCheck.Result.Difference;
+using System.Collections.Generic;
 using System.Linq;
-using ApiCheck.Result.Difference;
 
 namespace ApiCheck.Result
 {

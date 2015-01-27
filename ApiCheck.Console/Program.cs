@@ -1,5 +1,5 @@
-﻿using System;
-using ApiCheck.Loader;
+﻿using ApiCheck.Loader;
+using System;
 
 namespace ApiCheck.Console
 {

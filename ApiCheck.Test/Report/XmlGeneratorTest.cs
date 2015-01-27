@@ -1,10 +1,10 @@
-﻿using System;
-using System.Linq;
-using System.Xml.Linq;
-using ApiCheck.Report;
+﻿using ApiCheck.Report;
 using ApiCheck.Result;
 using ApiCheck.Result.Difference;
 using NUnit.Framework;
+using System;
+using System.Linq;
+using System.Xml.Linq;
 
 namespace ApiCheck.Test.Report
 {

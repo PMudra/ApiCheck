@@ -1,7 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using ApiCheck.Utility;
 using NUnit.Framework;
-using ApiCheck.Utility;
+using System;
+using System.Collections.Generic;
 
 namespace ApiCheck.Test.Utility
 {

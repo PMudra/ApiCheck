@@ -1,7 +1,7 @@
-﻿using System.Reflection;
-using ApiCheck.Result;
+﻿using ApiCheck.Result;
 using ApiCheck.Result.Difference;
 using ApiCheck.Utility;
+using System.Reflection;
 
 namespace ApiCheck.Comparer
 {

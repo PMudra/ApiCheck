@@ -1,8 +1,8 @@
-﻿using System;
+﻿using ApiCheck.Result;
+using ApiCheck.Utility;
+using System;
 using System.Collections.Generic;
 using System.Reflection;
-using ApiCheck.Result;
-using ApiCheck.Utility;
 
 namespace ApiCheck.Comparer
 {

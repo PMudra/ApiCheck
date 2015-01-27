@@ -1,8 +1,8 @@
+using ApiCheck.Loader;
+using NUnit.Framework;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using ApiCheck.Loader;
-using NUnit.Framework;
 
 namespace ApiCheck.Test.Loader
 {
