@@ -1,4 +1,6 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
+using System.Runtime.InteropServices;
 using ApiCheck.Result;
 using ApiCheck.Result.Difference;
 using ApiCheck.Utility;
@@ -22,6 +24,16 @@ namespace ApiCheck.Comparer
       if (ReferenceType.IsStatic != NewType.IsStatic)
       {
         ComparerResult.AddChangedFlag("Static", ReferenceType.IsStatic, Severity.Error);
+      }
+      if (ReferenceType.IsStatic && NewType.IsStatic && ReferenceType.FieldType.IsEnum)
+      {
+        // compare numeric enum values
+        object referenceValue = ReferenceType.GetValue(null);
+        object newValue = NewType.GetValue(null);
+        if (Convert.ToInt32(referenceValue) != Convert.ToInt32(newValue))
+        {
+          ComparerResult.AddChangedProperty("Value", referenceValue.ToString(), newValue.ToString(), Severity.Error);
+        }
       }
       return ComparerResult;
     }

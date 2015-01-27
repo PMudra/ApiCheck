@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
 using ApiCheck.Comparer;
 using ApiCheck.Result;
 using ApiCheck.Result.Difference;
@@ -42,6 +43,30 @@ namespace ApiCheck.Test.Comparer
       sut.Verify(result => result.AddChangedProperty(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<Severity>()), Times.Never);
       sut.Verify(result => result.AddComparerResult(It.IsAny<IComparerResult>()), Times.Never);
       sut.Verify(result => result.AddRemovedItem(It.IsAny<ResultContext>(), It.IsAny<string>(), It.IsAny<Severity>()), Times.Never);
+    }
+
+    [Test]
+    public void When_comparing_enum_values_with_different_numeric_value_should_report()
+    {
+        Assembly assembly1 = ApiBuilder.CreateApi().Enum("MyEnum", new[] { Tuple.Create("Value1", 1) }).Build();
+        Assembly assembly2 = ApiBuilder.CreateApi().Enum("MyEnum", new[] { Tuple.Create("Value1", 2) }).Build();
+        Mock<IComparerResult> sut = new Builder(assembly1, assembly2).ComparerResultMock;
+
+        sut.Verify(result => result.AddChangedProperty("Value", It.IsAny<string>(), It.IsAny<string>(), Severity.Error), Times.Once);
+    }
+
+    [Test]
+    public void When_comparing_enum_values_with_equal_numeric_value_should_not_report_anything()
+    {
+        Assembly assembly1 = ApiBuilder.CreateApi().Enum("MyEnum", new[] { Tuple.Create("Value1", 1) }).Build();
+        Assembly assembly2 = ApiBuilder.CreateApi().Enum("MyEnum", new[] { Tuple.Create("Value1", 1) }).Build();
+        Mock<IComparerResult> sut = new Builder(assembly1, assembly2).ComparerResultMock;
+
+        sut.Verify(result => result.AddAddedItem(It.IsAny<ResultContext>(), It.IsAny<string>(), It.IsAny<Severity>()), Times.Never);
+        sut.Verify(result => result.AddChangedFlag(It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<Severity>()), Times.Never);
+        sut.Verify(result => result.AddChangedProperty(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<Severity>()), Times.Never);
+        sut.Verify(result => result.AddComparerResult(It.IsAny<IComparerResult>()), Times.Never);
+        sut.Verify(result => result.AddRemovedItem(It.IsAny<ResultContext>(), It.IsAny<string>(), It.IsAny<Severity>()), Times.Never);
     }
 
     private class Builder
