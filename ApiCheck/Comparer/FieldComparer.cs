@@ -28,8 +28,8 @@ namespace ApiCheck.Comparer
       if (ReferenceType.IsStatic && NewType.IsStatic && ReferenceType.FieldType.IsEnum)
       {
         // compare numeric enum values
-        object referenceValue = ReferenceType.GetValue(null);
-        object newValue = NewType.GetValue(null);
+        object referenceValue = ReferenceType.GetRawConstantValue();
+        object newValue = NewType.GetRawConstantValue();
         if (Convert.ToInt32(referenceValue) != Convert.ToInt32(newValue))
         {
           ComparerResult.AddChangedProperty("Value", referenceValue.ToString(), newValue.ToString(), Severity.Error);
