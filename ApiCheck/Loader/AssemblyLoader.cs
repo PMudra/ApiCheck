@@ -22,12 +22,13 @@ namespace ApiCheck.Loader
       {
         AssemblyName assemblyName = new AssemblyName(args.Name);
         string path = Path.Combine(Path.GetDirectoryName(args.RequestingAssembly.Location), assemblyName.Name + ".dll");
-        return Assembly.ReflectionOnlyLoadFrom(path);
+        if (File.Exists(path))
+          return Assembly.ReflectionOnlyLoadFrom(path);
       }
       catch (Exception)
       {
-        return Assembly.ReflectionOnlyLoad(args.Name);
       }
+      return Assembly.ReflectionOnlyLoad(args.Name);
     }
 
     public Assembly ReflectionOnlyLoad(string path)
