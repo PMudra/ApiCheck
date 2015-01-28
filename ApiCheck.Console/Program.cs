@@ -1,5 +1,4 @@
-﻿using ApiCheck.Loader;
-using System;
+﻿using System;
 
 namespace ApiCheck.Console
 {
@@ -13,10 +12,7 @@ namespace ApiCheck.Console
       {
         try
         {
-          using (var loader = new AssemblyLoader())
-          {
-            returnValue = new Check(options.ReferencePath, options.NewPath, options.HtmlPath, options.XmlPath, options.IgnorePath, options.Verbose).CheckAssemblies();
-          }
+          returnValue = new Check(options.ReferencePath, options.NewPath, options.HtmlPath, options.XmlPath, options.IgnorePath, options.Verbose).CheckAssemblies();
         }
         catch (Exception exception)
         {

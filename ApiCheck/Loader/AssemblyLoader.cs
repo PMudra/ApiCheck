@@ -18,15 +18,11 @@ namespace ApiCheck.Loader
     
     private Assembly CurrentDomainOnReflectionOnlyAssemblyResolve(object sender, ResolveEventArgs args)
     {
-      try
+      AssemblyName assemblyName = new AssemblyName(args.Name);
+      string path = Path.Combine(Path.GetDirectoryName(args.RequestingAssembly.Location), assemblyName.Name + ".dll");
+      if (File.Exists(path))
       {
-        AssemblyName assemblyName = new AssemblyName(args.Name);
-        string path = Path.Combine(Path.GetDirectoryName(args.RequestingAssembly.Location), assemblyName.Name + ".dll");
-        if (File.Exists(path))
-          return Assembly.ReflectionOnlyLoadFrom(path);
-      }
-      catch (Exception)
-      {
+        return Assembly.ReflectionOnlyLoadFrom(path);
       }
       return Assembly.ReflectionOnlyLoad(args.Name);
     }
