@@ -2,7 +2,7 @@
 
 namespace ApiCheck.Utility
 {
-  internal static class ConstructorInfoExtemsions
+  internal static class ConstructorInfoExtensions
   {
     public static string GetCompareableName(this ConstructorInfo constructorInfo)
     {

@@ -77,7 +77,7 @@
     <Compile Include="Result\Difference\Severity.cs" />
     <Compile Include="Result\IComparerResult.cs" />
     <Compile Include="Result\ResultContext.cs" />
-    <Compile Include="Utility\ConstructorInfoExtemsions.cs" />
+    <Compile Include="Utility\ConstructorInfoExtensions.cs" />
     <Compile Include="Utility\EnumerableExtensions.cs" />
     <Compile Include="Utility\EventInfoExtensions.cs" />
     <Compile Include="Utility\FieldInfoExtensions.cs" />
