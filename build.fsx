@@ -22,7 +22,7 @@ let packages =
      "ApiCheck.Console", globalDescription + " Console application.", []
      "ApiCheck.NUnit", globalDescription + " NUnit integration.",
      ["ApiCheck", version
-      "NUnit", "2.6.3"]]
+      "NUnit", "2.6.4"]]
 
 Target "Clean" (fun _ ->
     CleanDirs [buildDir; deployDir; packagingDir]
