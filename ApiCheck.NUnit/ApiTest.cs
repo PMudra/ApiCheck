@@ -80,7 +80,7 @@ namespace ApiCheck.NUnit
       }
       if (apiTestData.Explicit)
       {
-        testCaseData.MakeExplicit();
+        testCaseData.MakeExplicit("");
       }
       return testCaseData;
     }
