@@ -49,7 +49,7 @@
     <Compile Include="..\SolutionInfo.cs">
       <Link>SolutionInfo.cs</Link>
     </Compile>
-    <Compile Include="ApiChecker.cs" />
+    <Compile Include="ApiComparer.cs" />
     <Compile Include="Comparer\ComparerBase.cs" />
     <Compile Include="Comparer\AssemblyComparer.cs" />
     <Compile Include="Comparer\ComparerContext.cs" />

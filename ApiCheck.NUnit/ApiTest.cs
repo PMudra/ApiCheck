@@ -45,12 +45,12 @@ namespace ApiCheck.NUnit
         foreach (object customAttribute in customAttributes)
         {
           ApiTestAttribute apiTestAttribute = (ApiTestAttribute)customAttribute;
-          ApiChecker apiChecker = ApiChecker.CreateInstance(assemblyLoader.ReflectionOnlyLoad(apiTestAttribute.ReferenceVersionPath),
+          ApiComparer apiComparer = ApiComparer.CreateInstance(assemblyLoader.ReflectionOnlyLoad(apiTestAttribute.ReferenceVersionPath),
                                                             assemblyLoader.ReflectionOnlyLoad(apiTestAttribute.NewVersionPath))
                                                             .Build();
-          apiChecker.CheckApi();
+          apiComparer.CheckApi();
           IList<string> ignoreList = IgnoreListLoader.LoadIgnoreList(GetReadStream(apiTestAttribute.IgnoreListPath));
-          yield return new ApiTestData(apiChecker.ComparerResult, apiTestAttribute.Category, ignoreList, apiTestAttribute.Explicit);
+          yield return new ApiTestData(apiComparer.ComparerResult, apiTestAttribute.Category, ignoreList, apiTestAttribute.Explicit);
         }
       }
     }

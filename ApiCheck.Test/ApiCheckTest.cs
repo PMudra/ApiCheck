@@ -20,7 +20,7 @@ namespace ApiCheck.Test
         StreamWriter infoLog = new StreamWriter(infoStream) { AutoFlush = true };
         StreamWriter detailLog = new StreamWriter(detailStream) { AutoFlush = true };
 
-        ApiChecker.CreateInstance(assembly1, assembly2).WithInfoLogging(infoLog.WriteLine).WithDetailLogging(detailLog.WriteLine).Build().CheckApi();
+        ApiComparer.CreateInstance(assembly1, assembly2).WithInfoLogging(infoLog.WriteLine).WithDetailLogging(detailLog.WriteLine).Build().CheckApi();
 
         Assert.Greater(infoStream.Length, 0);
         Assert.Greater(detailStream.Length, 0);
@@ -36,7 +36,7 @@ namespace ApiCheck.Test
       using (MemoryStream xmlStream = new MemoryStream())
       using (MemoryStream htmlStream = new MemoryStream())
       {
-        ApiChecker.CreateInstance(assembly1, assembly2).WithHtmlReport(htmlStream).WithXmlReport(xmlStream).Build().CheckApi();
+        ApiComparer.CreateInstance(assembly1, assembly2).WithHtmlReport(htmlStream).WithXmlReport(xmlStream).Build().CheckApi();
 
         Assert.Greater(htmlStream.Length, 0);
         Assert.Greater(xmlStream.Length, 0);
@@ -46,7 +46,7 @@ namespace ApiCheck.Test
     [Test]
     public void When_passing_invalid_values_should_throw_exception()
     {
-      Assert.Throws<ArgumentNullException>(() => ApiChecker.CreateInstance(null, null));
+      Assert.Throws<ArgumentNullException>(() => ApiComparer.CreateInstance(null, null));
     }
 
     [Test]
@@ -55,7 +55,7 @@ namespace ApiCheck.Test
       Assembly assembly1 = ApiBuilder.CreateApi().Build();
       Assembly assembly2 = ApiBuilder.CreateApi().Build();
       Assert.DoesNotThrow(
-        () => ApiChecker.CreateInstance(assembly1, assembly2).WithDetailLogging(null).WithHtmlReport(null).WithIgnoreList(null).WithInfoLogging(null).WithXmlReport(null).Build().CheckApi());
+        () => ApiComparer.CreateInstance(assembly1, assembly2).WithDetailLogging(null).WithHtmlReport(null).WithIgnoreList(null).WithInfoLogging(null).WithXmlReport(null).Build().CheckApi());
     }
 
     [Test]
@@ -71,7 +71,7 @@ namespace ApiCheck.Test
       int returnValue = -1;
       Assert.DoesNotThrow(
         () =>
-        returnValue = ApiChecker.CreateInstance(referenceAssembly, newAssembly)
+        returnValue = ApiComparer.CreateInstance(referenceAssembly, newAssembly)
                   .WithDetailLogging(s => logCount++)
                   .WithInfoLogging(s => logCount++)
                   .WithHtmlReport(htmlReport)

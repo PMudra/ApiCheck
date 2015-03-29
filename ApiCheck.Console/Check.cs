@@ -30,7 +30,7 @@ namespace ApiCheck.Console
 
     public int CheckAssemblies()
     {
-      return ApiChecker.CreateInstance(_referenceAssembly, _newAssembly)
+      return ApiComparer.CreateInstance(_referenceAssembly, _newAssembly)
         .WithIgnoreList(_ignoreList)
         .WithDetailLogging(_log)
         .WithInfoLogging(_log)
