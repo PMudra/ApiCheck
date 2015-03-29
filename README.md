@@ -63,3 +63,63 @@ namespace MyNamespace
     }
 }
 ```
+##Detected changes
+These are the changes in an api that are detected by the comparer:
+
+####Assemblies
+Description | Before | After | Severity
+----------- | ------ | ----- | --------
+assembly name | Company.MyAssembly | Company.YourAssembly | Error
+assembly version | 1.0.0.0 | 2.0.0.0 | Hint
+assembly public key token | B03F5F7F11D50A3A | 0A3AB03F5F7F11D5 | Error
+assembly culture | de-DE | en-US | Warning
+type removed | public class B { } | | Error
+type added | | public class B { } | Warning
+nested type removed | public class B { public class A { } } | public class B { } | Error
+nested type added | public class B { } | public class B { public class A { } } | Warning
+
+####Types
+Description | Before | After | Severity
+----------- | ------ | ----- | --------
+enum changed | public enum E { } | public class E { } | Error
+abstract changes | public abstract class A { } | public class A { } | Error
+sealed changed | public sealed class A { } | public class A { } | Error
+interface changed | public interface I { } | public class I { } | Error
+serializable changed | [Serializable]public class S { } | public class S { } | Error
+interfaces removed | public class A : Interface { } | public class A { } | Error
+interfaces added | public class A { } | public class A : Interface { } | Warning
+base changed | public class A : AbstractClass { } | public class A { } | Error
+method added | | public int A() { } | Warning
+method removed | public int A() { } | | Error
+constructor added | | public A() { } | Warning
+constructor removed | public A() { } | | Error
+property added | | public int P {get; set;} | Warning
+property removed | public int P {get; set;} | | Error
+event added | | public event DelegateType MyEvent | Warning
+event removed | public event DelegateType MyEvent | | Error
+field added | | public int i; | Warning
+field removed | public int i; | | Error
+
+####Methods
+Description | Before | After | Severity
+----------- | ------ | ----- | --------
+virtual changed | public virtual int A() | public int A() { } | Error
+static changed | public static int A() | public int A() { } | Error
+abstract changed | public abstract int A() | public int A() { } | Error
+sealed changed | public override sealed int A() | public int A() { } | Error
+return value changed | public int A() { } | public string A() { } | Error
+parameter name changed | public int A(int i) { } | public int A(int j) { } | Error
+default value changed | public int A(int i = 0) { } | public int A(int i = 1) { } | Error
+out changed | public int A(out int i) { } | public int A(ref int i) { } | Error
+
+####Properties, Events & Fields
+Description | Before | After | Severity
+----------- | ------ | ----- | --------
+property type changed | public int A {get; set;} | public string A {get;set;} | Error
+property setter changed | public int A {get; set;} | public int A {get;} | Error
+property getter changed | public int A {get; set;} | public int A {set;} | Error
+static changed | public static int A {get; set;} | public int A {ret; set;} | Error
+event type changed | public event DelegateType MyEvent | public event NewDelegateType MyEvent | Error
+static changed | public static event DelegateType MyEvent | public event DelegateType MyEvent | Error
+field type changed | public int i | public string i | Error
+static changed | public static int i | public string i | Error
