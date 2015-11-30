@@ -1,4 +1,6 @@
 # ApiCheck
+
+[![Join the chat at https://gitter.im/PMudra/ApiCheck](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/PMudra/ApiCheck?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 ApiCheck is a library that compares different versions of an API using reflection to ensure compatibility with third party components. This project contains three components: the library, the console application and the NUnit integration.
 ##Features
 * Comparing .NET assemblies.
