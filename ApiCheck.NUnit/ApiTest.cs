@@ -50,7 +50,7 @@ namespace ApiCheck.NUnit
                                                             .Build();
           apiComparer.CheckApi();
           IList<string> ignoreList = IgnoreListLoader.LoadIgnoreList(GetReadStream(apiTestAttribute.IgnoreListPath));
-          yield return new ApiTestData(apiComparer.ComparerResult, apiTestAttribute.Category, ignoreList, apiTestAttribute.Explicit);
+          yield return new ApiTestData(apiComparer.ComparerResult, apiTestAttribute.Category, ignoreList, apiTestAttribute.Explicit, apiTestAttribute.HandleWarningsAsErrors);
         }
       }
     }
@@ -65,22 +65,22 @@ namespace ApiCheck.NUnit
       List<ITestCaseData> testCaseData = new List<ITestCaseData>();
       IEnumerable<ApiTestData> apiTestData = results.ToList();
       testCaseData.AddRange(apiTestData.Select(GenerateTestCase));
-      testCaseData.AddRange(apiTestData.SelectMany(result => result.ComparerResult.ComparerResults.Select(r => GenerateTestCase(new ApiTestData(r, result.Category, result.IgnoreList, result.Explicit)))));
+      testCaseData.AddRange(apiTestData.SelectMany(result => result.ComparerResult.ComparerResults.Select(r => GenerateTestCase(new ApiTestData(r, result.Category, result.IgnoreList, result.Explicit, result.HandleWarningsAsErrors)))));
       return testCaseData;
     }
 
     private static ITestCaseData GenerateTestCase(ApiTestData apiTestData)
     {
       IComparerResult comparerResult = apiTestData.ComparerResult;
-      bool fail = comparerResult.GetAllCount(Severity.Error) + comparerResult.GetAllCount(Severity.Warning) > 0;
-      TestCaseData testCaseData = new TestCaseData(!fail, fail ? GetFailMessage(comparerResult) : "").SetName(comparerResult.Name).SetCategory(apiTestData.Category);
+      bool fail = comparerResult.GetAllCount(Severity.Error) > 0 || apiTestData.HandleWarningsAsErrors && comparerResult.GetAllCount(Severity.Warning) > 0;
+      TestCaseData testCaseData = new TestCaseData(!fail, GetFailMessage(comparerResult)).SetName(comparerResult.Name).SetCategory(apiTestData.Category);
       if (apiTestData.IgnoreList.Contains(comparerResult.Name))
       {
-        testCaseData.Ignore();
+        testCaseData.Ignore("Ignored by ignore list");
       }
       if (apiTestData.Explicit)
       {
-        testCaseData.MakeExplicit("");
+        testCaseData.MakeExplicit("Set explicit by ApiTestAttribute");
       }
       return testCaseData;
     }
@@ -88,7 +88,11 @@ namespace ApiCheck.NUnit
     private static string GetFailMessage(IComparerResult comparerResult)
     {
       UnitTestWriter unitTestWriter = new UnitTestWriter();
-      GetFailMessageElements(comparerResult).Write(unitTestWriter);
+      Element failMessageElements = GetFailMessageElements(comparerResult);
+      if (failMessageElements != null)
+      {
+        failMessageElements.Write(unitTestWriter);
+      }
       return unitTestWriter.GetTextAsString();
     }
 
@@ -105,38 +109,24 @@ namespace ApiCheck.NUnit
 
     private class ApiTestData
     {
-      private readonly IComparerResult _comparerResult;
-      private readonly string _category;
-      private readonly IList<string> _ignoreList;
-      private readonly bool _explicit;
-
-      public ApiTestData(IComparerResult comparerResult, string category, IList<string> ignoreList, bool @explicit)
+      public ApiTestData(IComparerResult comparerResult, string category, IList<string> ignoreList, bool @explicit, bool handleWarningsAsErrors)
       {
-        _comparerResult = comparerResult;
-        _category = category;
-        _ignoreList = ignoreList;
-        _explicit = @explicit;
+        ComparerResult = comparerResult;
+        Category = category;
+        IgnoreList = ignoreList;
+        Explicit = @explicit;
+        HandleWarningsAsErrors = handleWarningsAsErrors;
       }
 
-      public IComparerResult ComparerResult
-      {
-        get { return _comparerResult; }
-      }
+      public bool HandleWarningsAsErrors { get; private set; }
 
-      public string Category
-      {
-        get { return _category; }
-      }
+      public IComparerResult ComparerResult { get; private set; }
 
-      public bool Explicit
-      {
-        get { return _explicit; }
-      }
+      public string Category { get; private set; }
 
-      public IList<string> IgnoreList
-      {
-        get { return _ignoreList; }
-      }
+      public bool Explicit { get; private set; }
+
+      public IList<string> IgnoreList { get; private set; }
     }
   }
 }
