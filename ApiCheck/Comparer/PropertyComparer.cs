@@ -19,11 +19,11 @@ namespace ApiCheck.Comparer
       {
         ComparerResult.AddChangedProperty("Type", ReferenceType.PropertyType.GetCompareableName(), NewType.PropertyType.GetCompareableName(), Severity.Error);
       }
-      if (ReferenceType.CanWrite != NewType.CanWrite)
+      if ((ReferenceType.CanWrite && ReferenceType.SetMethod.IsPublic) != (NewType.CanWrite && NewType.SetMethod.IsPublic))
       {
         ComparerResult.AddChangedFlag("Setter", ReferenceType.CanWrite, Severity.Error);
       }
-      if (ReferenceType.CanRead != NewType.CanRead)
+      if ((ReferenceType.CanRead && ReferenceType.GetMethod.IsPublic) != (NewType.CanRead && NewType.GetMethod.IsPublic))
       {
         ComparerResult.AddChangedFlag("Getter", ReferenceType.CanRead, Severity.Error);
       }

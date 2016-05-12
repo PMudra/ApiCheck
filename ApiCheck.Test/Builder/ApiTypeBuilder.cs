@@ -79,16 +79,15 @@ namespace ApiCheck.Test.Builder
       return ApiMethodBuilder.Method(this, attributes);
     }
 
-    public ApiTypeBuilder Property(string name, Type propertyType, bool hasSetter = true, bool hasGetter = true, Type[] indexParameters = null, bool @static = false)
+    public ApiTypeBuilder Property(string name, Type propertyType, bool hasSetter = true, bool hasGetter = true, Type[] indexParameters = null, bool @static = false, bool setterInternal = false, bool getterInternal = false)
     {
       PropertyBuilder propertyBuilder = _typeBuilder.DefineProperty(name, PropertyAttributes.None, propertyType, indexParameters);
 
       if (hasGetter)
       {
-        MethodBuilder getMethodBuilder = _typeBuilder.DefineMethod(string.Format("get_{0}", name), @static ?
-          MethodAttributes.Public | MethodAttributes.SpecialName | MethodAttributes.HideBySig | MethodAttributes.Static
-          : MethodAttributes.Public | MethodAttributes.SpecialName | MethodAttributes.HideBySig,
-                                                                   propertyType, indexParameters);
+        MethodAttributes visibility = getterInternal ? MethodAttributes.Assembly : MethodAttributes.Public;
+        MethodBuilder getMethodBuilder = _typeBuilder.DefineMethod(string.Format("get_{0}", name), @static ? visibility | MethodAttributes.SpecialName | MethodAttributes.HideBySig | MethodAttributes.Static :
+                                                                                                             visibility | MethodAttributes.SpecialName | MethodAttributes.HideBySig, propertyType, indexParameters);
 
         ILGenerator getIlGenerator = getMethodBuilder.GetILGenerator();
         getIlGenerator.Emit(ApiBuilderHelper.GetReturnOpCodeByType(propertyType));
@@ -97,10 +96,9 @@ namespace ApiCheck.Test.Builder
       }
       if (hasSetter)
       {
-        MethodBuilder setMethodBuilder = _typeBuilder.DefineMethod(string.Format("set_{0}", name), @static ?
-          MethodAttributes.Public | MethodAttributes.SpecialName | MethodAttributes.HideBySig | MethodAttributes.Static
-          : MethodAttributes.Public | MethodAttributes.SpecialName | MethodAttributes.HideBySig,
-          null, new[] { propertyType });
+        MethodAttributes visibility = setterInternal ? MethodAttributes.Assembly : MethodAttributes.Public;
+        MethodBuilder setMethodBuilder = _typeBuilder.DefineMethod(string.Format("set_{0}", name), @static ? visibility | MethodAttributes.SpecialName | MethodAttributes.HideBySig | MethodAttributes.Static : 
+                                                                                                             visibility | MethodAttributes.SpecialName | MethodAttributes.HideBySig, null, new[] { propertyType });
 
         ILGenerator setIlGenerator = setMethodBuilder.GetILGenerator();
         setIlGenerator.Emit(OpCodes.Ret);

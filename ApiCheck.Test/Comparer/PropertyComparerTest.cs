@@ -55,6 +55,26 @@ namespace ApiCheck.Test.Comparer
       sut.Verify(result => result.AddRemovedItem(It.IsAny<ResultContext>(), It.IsAny<string>(), It.IsAny<Severity>()), Times.Never);
     }
 
+    [Test]
+    public void When_adding_internal_setter_should_not_report()
+    {
+      Assembly assembly1 = ApiBuilder.CreateApi().Class().Property("MyProp", typeof(int), false).Build().Build();
+      Assembly assembly2 = ApiBuilder.CreateApi().Class().Property("MyProp", typeof(int), true, setterInternal: true).Build().Build();
+      Mock<IComparerResult> sut = new Builder(assembly1, assembly2).ComparerResultMock;
+
+      sut.Verify(result => result.AddChangedFlag("Setter", It.IsAny<bool>(), Severity.Error), Times.Never);
+    }
+
+    [Test]
+    public void When_adding_internal_getter_should_not_report()
+    {
+      Assembly assembly1 = ApiBuilder.CreateApi().Class().Property("MyProp", typeof(int), hasGetter: false).Build().Build();
+      Assembly assembly2 = ApiBuilder.CreateApi().Class().Property("MyProp", typeof(int), hasGetter: true, getterInternal: true).Build().Build();
+      Mock<IComparerResult> sut = new Builder(assembly1, assembly2).ComparerResultMock;
+
+      sut.Verify(result => result.AddChangedFlag("Getter", It.IsAny<bool>(), Severity.Error), Times.Never);
+    }
+
     private class Builder
     {
       private readonly Mock<IComparerResult> _comparerResultMock;
