@@ -45,11 +45,14 @@ namespace ApiCheck.NUnit
         foreach (object customAttribute in customAttributes)
         {
           ApiTestAttribute apiTestAttribute = (ApiTestAttribute)customAttribute;
+
+          IList<string> ignoreList = IgnoreListLoader.LoadIgnoreList(GetReadStream(apiTestAttribute.IgnoreListPath));
+
           ApiComparer apiComparer = ApiComparer.CreateInstance(assemblyLoader.ReflectionOnlyLoad(apiTestAttribute.ReferenceVersionPath),
                                                             assemblyLoader.ReflectionOnlyLoad(apiTestAttribute.NewVersionPath))
+                                                            .WithIgnoreList(ignoreList)
                                                             .Build();
           apiComparer.CheckApi();
-          IList<string> ignoreList = IgnoreListLoader.LoadIgnoreList(GetReadStream(apiTestAttribute.IgnoreListPath));
           yield return new ApiTestData(apiComparer.ComparerResult, apiTestAttribute.Category, ignoreList, apiTestAttribute.Explicit, apiTestAttribute.HandleWarningsAsErrors);
         }
       }
