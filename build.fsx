@@ -9,7 +9,7 @@ let deployDir = @".\deploy\"
 let packagingDir = @".\packaging\"
 
 let buildVersion = if isLocalBuild then "0" else buildVersion
-let version = "1.0." + buildVersion
+let version = "1.1." + buildVersion
 
 let authors = ["ise Individuelle Software-Entwicklung GmbH"]
 let releaseNotes = "Initial Release."
