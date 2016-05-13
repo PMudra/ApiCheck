@@ -50,13 +50,10 @@ namespace ApiCheck.Result
       get { return _comparerResults; }
     }
 
-    public int GetAllCount(Severity severity)
+    public int GetAllCount(Severity severity, bool ignoreChildren)
     {
-      return ((IEnumerable<Difference.Difference>)AddedItems).Union(RemovedItems)
-                                                             .Union(ChangedFlags)
-                                                             .Union(ChangedProperties)
-                                                             .Count(addedOrRemoved => addedOrRemoved.Severity == severity) +
-             ComparerResults.Sum(comparerResult => comparerResult.GetAllCount(severity));
+      var count = ((IEnumerable<Difference.Difference>)AddedItems).Union(RemovedItems).Union(ChangedFlags).Union(ChangedProperties).Count(addedOrRemoved => addedOrRemoved.Severity == severity);
+      return count + (ignoreChildren ? 0 : ComparerResults.Sum(comparerResult => comparerResult.GetAllCount(severity, false)));
     }
 
     public ResultContext ResultContext

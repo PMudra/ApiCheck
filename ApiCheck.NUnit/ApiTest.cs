@@ -46,14 +46,12 @@ namespace ApiCheck.NUnit
         {
           ApiTestAttribute apiTestAttribute = (ApiTestAttribute)customAttribute;
 
-          IList<string> ignoreList = IgnoreListLoader.LoadIgnoreList(GetReadStream(apiTestAttribute.IgnoreListPath));
-
           ApiComparer apiComparer = ApiComparer.CreateInstance(assemblyLoader.ReflectionOnlyLoad(apiTestAttribute.ReferenceVersionPath),
-                                                            assemblyLoader.ReflectionOnlyLoad(apiTestAttribute.NewVersionPath))
-                                                            .WithIgnoreList(ignoreList)
-                                                            .Build();
+                                                               assemblyLoader.ReflectionOnlyLoad(apiTestAttribute.NewVersionPath))
+                                                               .WithIgnoreList(IgnoreListLoader.LoadIgnoreList(GetReadStream(apiTestAttribute.IgnoreListPath)))
+                                                               .Build();
           apiComparer.CheckApi();
-          yield return new ApiTestData(apiComparer.ComparerResult, apiTestAttribute.Category, ignoreList, apiTestAttribute.Explicit, apiTestAttribute.HandleWarningsAsErrors);
+          yield return new ApiTestData(apiComparer.ComparerResult, apiTestAttribute.Category, apiTestAttribute.Explicit, apiTestAttribute.HandleWarningsAsErrors);
         }
       }
     }
@@ -68,24 +66,26 @@ namespace ApiCheck.NUnit
       List<ITestCaseData> testCaseData = new List<ITestCaseData>();
       IEnumerable<ApiTestData> apiTestData = results.ToList();
       testCaseData.AddRange(apiTestData.Select(GenerateTestCase));
-      testCaseData.AddRange(apiTestData.SelectMany(result => result.ComparerResult.ComparerResults.Select(r => GenerateTestCase(new ApiTestData(r, result.Category, result.IgnoreList, result.Explicit, result.HandleWarningsAsErrors)))));
+      testCaseData.AddRange(apiTestData.SelectMany(result => result.ComparerResult.ComparerResults.Select(r => GenerateTestCase(new ApiTestData(r, result.Category, result.Explicit, result.HandleWarningsAsErrors)))));
       return testCaseData;
     }
 
     private static ITestCaseData GenerateTestCase(ApiTestData apiTestData)
     {
       IComparerResult comparerResult = apiTestData.ComparerResult;
-      bool fail = comparerResult.GetAllCount(Severity.Error) > 0 || apiTestData.HandleWarningsAsErrors && comparerResult.GetAllCount(Severity.Warning) > 0;
+      bool fail = Fail(apiTestData, comparerResult);
       TestCaseData testCaseData = new TestCaseData(!fail, GetFailMessage(comparerResult)).SetName(comparerResult.Name).SetCategory(apiTestData.Category);
-      if (apiTestData.IgnoreList.Contains(comparerResult.Name))
-      {
-        testCaseData.Ignore("Ignored by ignore list");
-      }
       if (apiTestData.Explicit)
       {
         testCaseData.MakeExplicit("Set explicit by ApiTestAttribute");
       }
       return testCaseData;
+    }
+
+    private static bool Fail(ApiTestData apiTestData, IComparerResult comparerResult)
+    {
+      bool ignoreChildren = apiTestData.ComparerResult.ResultContext == ResultContext.Assembly;
+      return comparerResult.GetAllCount(Severity.Error, ignoreChildren) > 0 || apiTestData.HandleWarningsAsErrors && comparerResult.GetAllCount(Severity.Warning, ignoreChildren) > 0;
     }
 
     private static string GetFailMessage(IComparerResult comparerResult)
@@ -106,17 +106,21 @@ namespace ApiCheck.NUnit
       element.Add("Removed Elements:", comparerResult.RemovedItems.Select(removed => string.Format("{0} -- {1}", removed.ItemName, removed.ResultContext)));
       element.Add("Changed Flags:", comparerResult.ChangedFlags.Select(changed => string.Format("{0} from {1} to {2}", changed.PropertyName, changed.ReferenceValue, changed.NewValue)));
       element.Add("Changed Attributes:", comparerResult.ChangedProperties.Select(changed => string.Format("{0} from {1} to {2}", changed.PropertyName, changed.ReferenceValue, changed.NewValue)));
-      element.Add("Changed Children:", comparerResult.ComparerResults.Select(GetFailMessageElements));
+
+      // Do not list child elements for assemblies because all of the children will be placed in a separate test
+      if (comparerResult.ResultContext != ResultContext.Assembly)
+      {
+        element.Add("Changed Children:", comparerResult.ComparerResults.Select(GetFailMessageElements));
+      }
       return element.HasElements ? element : null;
     }
 
     private class ApiTestData
     {
-      public ApiTestData(IComparerResult comparerResult, string category, IList<string> ignoreList, bool @explicit, bool handleWarningsAsErrors)
+      public ApiTestData(IComparerResult comparerResult, string category, bool @explicit, bool handleWarningsAsErrors)
       {
         ComparerResult = comparerResult;
         Category = category;
-        IgnoreList = ignoreList;
         Explicit = @explicit;
         HandleWarningsAsErrors = handleWarningsAsErrors;
       }
@@ -128,8 +132,6 @@ namespace ApiCheck.NUnit
       public string Category { get; private set; }
 
       public bool Explicit { get; private set; }
-
-      public IList<string> IgnoreList { get; private set; }
     }
   }
 }

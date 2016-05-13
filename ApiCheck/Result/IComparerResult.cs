@@ -5,7 +5,7 @@ namespace ApiCheck.Result
 {
   public interface IComparerResult
   {
-    int GetAllCount(Severity severity);
+    int GetAllCount(Severity severity, bool ignoreChildren);
     ResultContext ResultContext { get; }
     string Name { get; }
     IEnumerable<Changed<string>> ChangedProperties { get; }

@@ -13,8 +13,11 @@ namespace ApiCheck.Test.Result
                                           .Result().Property(Severity.Warning).Result().Flag()._._
                                         .Build();
 
-      Assert.AreEqual(3, sut.GetAllCount(Severity.Error));
-      Assert.AreEqual(2, sut.GetAllCount(Severity.Warning));
+      Assert.AreEqual(3, sut.GetAllCount(Severity.Error, false));
+      Assert.AreEqual(2, sut.GetAllCount(Severity.Warning, false));
+
+      Assert.AreEqual(2, sut.GetAllCount(Severity.Error, true));
+      Assert.AreEqual(1, sut.GetAllCount(Severity.Warning, true));
     }
 
     private class Builder

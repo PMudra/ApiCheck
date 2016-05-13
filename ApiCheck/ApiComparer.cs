@@ -51,7 +51,7 @@ namespace ApiCheck
         _comparerContext.LogInfo("Exporting html report.");
         XmlTransformer.TransformToHtml(element.CreateReader(), _htmlOutput);
       }
-      return ComparerResult.GetAllCount(Severity.Error) + ComparerResult.GetAllCount(Severity.Warning);
+      return ComparerResult.GetAllCount(Severity.Error, false) + ComparerResult.GetAllCount(Severity.Warning, false);
     }
 
     /// <summary>
