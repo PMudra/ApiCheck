@@ -33,7 +33,35 @@ namespace ApiCheck.Comparer
     {
       string referenceBase = ReferenceType.BaseType != null ? ReferenceType.BaseType.GetCompareableName() : null;
       string newBase = NewType.BaseType != null ? NewType.BaseType.GetCompareableName() : null;
-      AddToResultIfNotEqual("Base", referenceBase, newBase, Severity.Error);
+
+      if (ReferenceType.BaseType == null)
+      {
+        // Adding a base class is subclass warning
+        AddToResultIfNotEqual("Base", referenceBase, newBase, Severity.Warning);
+      }
+      else if (ReferenceType.BaseType != null && NewType.BaseType != null && IsSubclassOf(NewType.BaseType.BaseType, referenceBase))
+      {
+        // Adding a new base class that extends the old one is subclass warning
+        AddToResultIfNotEqual("Base", referenceBase, newBase, Severity.Warning);
+      }
+      else
+      {
+        // Everything else should be an error or the base class didn't change
+        AddToResultIfNotEqual("Base", referenceBase, newBase, Severity.Error);
+      }
+    }
+
+    private bool IsSubclassOf(Type subclass, string oldBase)
+    {
+      if (subclass == null)
+      {
+        return false;
+      }
+      if (subclass.GetCompareableName() == oldBase)
+      {
+        return true;
+      }
+      return IsSubclassOf(subclass.BaseType, oldBase);
     }
 
     private void CompareMethods(Func<Type, MethodBase[]> getMethods, Func<Type, string, Type[], MethodBase> getMethod, ResultContext resultContext)

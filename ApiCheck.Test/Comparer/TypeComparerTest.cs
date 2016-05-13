@@ -7,6 +7,7 @@ using NUnit.Framework;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Reflection;
 
 namespace ApiCheck.Test.Comparer
@@ -60,11 +61,41 @@ namespace ApiCheck.Test.Comparer
     [Test]
     public void When_base_class_changed_it_is_reported()
     {
-      Assembly assembly1 = ApiBuilder.CreateApi().Class(extends: typeof(List<object>)).Build().Build();
+      Assembly assembly1 = ApiBuilder.CreateApi().Class(extends: typeof(List<object>)).Build().Class("B", typeof(List<string>)).Build().Build();
+      Assembly assembly2 = ApiBuilder.CreateApi().Class(extends: typeof(List<int>)).Build().Class("B").Build().Build();
+      var sut = new Builder(assembly1, assembly2).ComparerResultMock;
+
+      sut.Verify(result => result.AddChangedProperty("Base", It.IsAny<string>(), It.IsAny<string>(), Severity.Error), Times.Exactly(2));
+    }
+
+    [Test]
+    public void When_base_class_changed_and_new_base_extends_old_base_should_repoert_as_warning()
+    {
+      Assembly assembly1 = ApiBuilder.CreateApi().Class(extends: typeof(Collection<string>)).Build().Class("B", typeof(object)).Build().Build();
+      Assembly assembly2 = ApiBuilder.CreateApi().Class(extends: typeof(ObservableCollection<string>)).Build().Class("B", typeof(ObservableCollection<string>)).Build().Build();
+      var sut = new Builder(assembly1, assembly2).ComparerResultMock;
+
+      sut.Verify(result => result.AddChangedProperty("Base", It.IsAny<string>(), It.IsAny<string>(), Severity.Warning), Times.Exactly(2));
+    }
+
+    [Test]
+    public void When_base_class_is_added_should_report_as_warning()
+    {
+      Assembly assembly1 = ApiBuilder.CreateApi().Class().Build().Build();
       Assembly assembly2 = ApiBuilder.CreateApi().Class(extends: typeof(List<int>)).Build().Build();
       var sut = new Builder(assembly1, assembly2).ComparerResultMock;
 
-      sut.Verify(result => result.AddChangedProperty("Base", It.IsAny<string>(), It.IsAny<string>(), Severity.Error), Times.Once);
+      sut.Verify(result => result.AddChangedProperty("Base", It.IsAny<string>(), It.IsAny<string>(), Severity.Warning), Times.Once);
+    }
+
+    [Test]
+    public void When_base_class_is_not_changed_it_is_not_reported()
+    {
+      Assembly assembly1 = ApiBuilder.CreateApi().Class(extends: typeof(List<int>)).Build().Class("B").Build().Build();
+      Assembly assembly2 = ApiBuilder.CreateApi().Class(extends: typeof(List<int>)).Build().Class("B").Build().Build();
+      var sut = new Builder(assembly1, assembly2).ComparerResultMock;
+
+      sut.Verify(result => result.AddChangedProperty("Base", It.IsAny<string>(), It.IsAny<string>(), Severity.Error), Times.Never);
     }
 
     [Test]
