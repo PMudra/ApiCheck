@@ -105,6 +105,18 @@ namespace ApiCheck.Test.Comparer
       sut.Verify(result => result.AddRemovedItem(ResultContext.Class, It.IsAny<string>(), It.IsAny<Severity>()), Times.Never);
     }
 
+    [Test]
+    public void When_removing_a_public_nested_type_in_an_internal_class_should_not_report()
+    {
+      Assembly assembly1 = ApiBuilder.CreateApi().Class(attributes: TypeAttributes.NotPublic).NestedType().Build().Build();
+
+      Assembly assembly2 = ApiBuilder.CreateApi().Build();
+      var sut = new Builder(assembly1, assembly2).ComparerResultMock;
+
+      sut.Verify(result => result.AddAddedItem(It.IsAny<ResultContext>(), It.IsAny<string>(), It.IsAny<Severity>()), Times.Never);
+      sut.Verify(result => result.AddRemovedItem(It.IsAny<ResultContext>(), It.IsAny<string>(), It.IsAny<Severity>()), Times.Never);
+    }
+
     private class Builder
     {
       private readonly IComparerResult _comparerResult;

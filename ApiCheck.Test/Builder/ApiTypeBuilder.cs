@@ -11,6 +11,7 @@ namespace ApiCheck.Test.Builder
     private TypeBuilder _typeBuilder;
     private ApiBuilder _parent;
     private readonly IList<GenericParam> _genericParameters;
+    private TypeBuilder _nestedType;
 
     private ApiTypeBuilder()
     {
@@ -25,6 +26,12 @@ namespace ApiCheck.Test.Builder
         _parent = parent
       };
       return apiTypeBuilder;
+    }
+
+    public ApiTypeBuilder NestedType()
+    {
+      _nestedType = _typeBuilder.DefineNestedType("Nested", TypeAttributes.NestedPublic);
+      return this;
     }
 
     public ApiTypeBuilder GenericParameter(string name, GenericParameterAttributes genericParameterAttributes = GenericParameterAttributes.None, Type baseType = null, Type[] interfaces = null)
@@ -153,6 +160,10 @@ namespace ApiCheck.Test.Builder
         }
       }
       _typeBuilder.CreateType();
+      if (_nestedType != null)
+      {
+        _nestedType.CreateType();
+      }
       return _parent;
     }
 

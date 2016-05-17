@@ -72,7 +72,7 @@ namespace ApiCheck.Comparer
 
     private IEnumerable<string> GetTypeNames(Func<IEnumerable<TypeInfo>> getTypes)
     {
-      return getTypes().Where(type => (type.IsPublic || type.IsNestedPublic) && ComparerContext.IsNotIgnored(type)).Select(type => type.GetCompareableName());
+      return getTypes().Where(type => type.IsVisible && ComparerContext.IsNotIgnored(type)).Select(type => type.GetCompareableName());
     }
   }
 

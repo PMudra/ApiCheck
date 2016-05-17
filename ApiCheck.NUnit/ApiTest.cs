@@ -102,10 +102,10 @@ namespace ApiCheck.NUnit
     private static Element GetFailMessageElements(IComparerResult comparerResult)
     {
       Element element = new Element(string.Format("{0} {1}", comparerResult.ResultContext, comparerResult.Name));
-      element.Add("Added Elements:", comparerResult.AddedItems.Select(added => string.Format("{0} -- {1}", added.ItemName, added.ResultContext)));
-      element.Add("Removed Elements:", comparerResult.RemovedItems.Select(removed => string.Format("{0} -- {1}", removed.ItemName, removed.ResultContext)));
-      element.Add("Changed Flags:", comparerResult.ChangedFlags.Select(changed => string.Format("{0} from {1} to {2}", changed.PropertyName, changed.ReferenceValue, changed.NewValue)));
-      element.Add("Changed Attributes:", comparerResult.ChangedProperties.Select(changed => string.Format("{0} from {1} to {2}", changed.PropertyName, changed.ReferenceValue, changed.NewValue)));
+      element.Add("Added Elements:", comparerResult.AddedItems.Select(added => string.Format("{0} -- {1} ({2})", added.ItemName, added.ResultContext, added.Severity)));
+      element.Add("Removed Elements:", comparerResult.RemovedItems.Select(removed => string.Format("{0} -- {1} ({2})", removed.ItemName, removed.ResultContext, removed.Severity)));
+      element.Add("Changed Flags:", comparerResult.ChangedFlags.Select(changed => string.Format("{0} from {1} to {2} ({3})", changed.PropertyName, changed.ReferenceValue, changed.NewValue, changed.Severity)));
+      element.Add("Changed Attributes:", comparerResult.ChangedProperties.Select(changed => string.Format("{0} from {1} to {2} ({3})", changed.PropertyName, changed.ReferenceValue, changed.NewValue, changed.Severity)));
 
       // Do not list child elements for assemblies because all of the children will be placed in a separate test
       if (comparerResult.ResultContext != ResultContext.Assembly)
