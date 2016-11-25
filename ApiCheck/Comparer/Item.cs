@@ -42,7 +42,7 @@ namespace ApiCheck.Comparer
       {
         return true;
       }
-      if (obj.GetType() != typeof(Item))
+      if (!(obj is Item))
       {
         return false;
       }

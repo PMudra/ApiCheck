@@ -21,8 +21,8 @@ namespace ApiCheck.Comparer
       CompareAttributes();
       CompareInterfaces();
       CompareBase();
-      CompareMethods(type => type.GetApiMethods().Where(method => ComparerContext.IsNotIgnored(method)).Cast<MethodBase>().ToArray(), (type, name, types) => type.GetMethod(name, types), ResultContext.Method);
-      CompareMethods(type => type.GetApiConstructors().Where(ctor => ComparerContext.IsNotIgnored(ctor)).Cast<MethodBase>().ToArray(), (type, name, types) => type.GetApiConstructor(name, types), ResultContext.Constructor);
+      CompareMethods(type => type.GetApiMethods().Where(method => ComparerContext.IsNotIgnored(method)).Cast<MethodBase>().ToArray(), ResultContext.Method);
+      CompareMethods(type => type.GetApiConstructors().Where(ctor => ComparerContext.IsNotIgnored(ctor)).Cast<MethodBase>().ToArray(), ResultContext.Constructor);
       CompareProperties();
       CompareEvents();
       CompareFields();
@@ -64,36 +64,27 @@ namespace ApiCheck.Comparer
       return IsSubclassOf(subclass.BaseType, oldBase);
     }
 
-    private void CompareMethods(Func<Type, MethodBase[]> getMethods, Func<Type, string, Type[], MethodBase> getMethod, ResultContext resultContext)
+    private void CompareMethods(Func<Type, MethodBase[]> getMethods, ResultContext resultContext)
     {
-      PairList<Item> pairList = new PairList<Item>();
+      PairList<MethodItem> pairList = new PairList<MethodItem>();
+      getMethods(ReferenceType).ToList().ForEach(m => pairList.AddReferenceItem(new MethodItem(m)));
+      getMethods(NewType).ToList().ForEach(m => pairList.AddNewItem(new MethodItem(m)));
 
-      AddMethodsToPairList(pairList.AddReferenceItem, () => getMethods(ReferenceType));
-      AddMethodsToPairList(pairList.AddNewItem, () => getMethods(NewType));
-
-      foreach (Item method in pairList.RemovedItems)
+      foreach (MethodItem item in pairList.RemovedItems)
       {
-        ComparerResult.AddRemovedItem(resultContext, getMethod(ReferenceType, method.Name, method.Types).ToString(), Severity.Error);
+        ComparerResult.AddRemovedItem(resultContext, item.Method.ToString(), Severity.Error);
       }
 
-      foreach (Item method in pairList.AddedItems)
+      foreach (MethodItem item in pairList.AddedItems)
       {
-        ComparerResult.AddAddedItem(resultContext, getMethod(NewType, method.Name, method.Types).ToString(), Severity.Warning);
+        ComparerResult.AddAddedItem(resultContext, item.Method.ToString(), Severity.Warning);
       }
 
-      foreach (ItemPair<Item> methodPair in pairList.EqualItems)
+      foreach (ItemPair<MethodItem> itemPair in pairList.EqualItems)
       {
-        MethodBase referenceMethod = getMethod(ReferenceType, methodPair.ReferenceItem.Name, methodPair.ReferenceItem.Types);
-        MethodBase newMethod = getMethod(NewType, methodPair.NewItem.Name, methodPair.NewItem.Types);
+        MethodBase referenceMethod = itemPair.ReferenceItem.Method;
+        MethodBase newMethod = itemPair.NewItem.Method;
         ComparerResult.AddComparerResult(ComparerContext.CreateComparer(referenceMethod, newMethod).Compare());
-      }
-    }
-
-    private static void AddMethodsToPairList(Action<Item> addToPairList, Func<MethodBase[]> getMethods)
-    {
-      foreach (MethodBase method in getMethods())
-      {
-        addToPairList(new Item(method.Name, method.GetParameters().Select(param => param.ParameterType).ToArray()));
       }
     }
 
