@@ -32,6 +32,17 @@ namespace ApiCheck.Test.Comparer
     }
 
     [Test]
+    public void When_generic_method_is_changed_and_ignored_should_not_report()
+    {
+      Assembly assembly1 = ApiBuilder.CreateApi("A").Class("A.C").Method("M").Build().Method("M").GenericParameter().Build().Build().Build();
+      Assembly assembly2 = ApiBuilder.CreateApi("A").Class("A.C").Method("M2").Build().Method("M2").GenericParameter().Build().Build().Build();
+      IComparerResult sut = new Builder(assembly1, assembly2, new[] { "A.C.M" }).Build();
+
+      Assert.AreEqual(0, sut.ComparerResults.First().RemovedItems.Count());
+      Assert.AreEqual(2, sut.ComparerResults.First().AddedItems.Count());
+    }
+
+    [Test]
     public void When_ctor_is_changed_and_ignored_should_not_report()
     {
       Assembly assembly1 = ApiBuilder.CreateApi("A").Class("A.C").Constructor().Parameter(typeof(int)).Build().Build().Build();

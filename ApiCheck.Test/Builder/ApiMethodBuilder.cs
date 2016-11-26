@@ -13,6 +13,7 @@ namespace ApiCheck.Test.Builder
     private MethodAttributes _methodAttributes;
     private Type _returnType;
     private readonly IList<ApiParameter> _parameters = new List<ApiParameter>();
+    private readonly ISet<string> _genericParameters = new HashSet<string>();
     private bool _ctor;
 
     private ApiMethodBuilder()
@@ -63,6 +64,12 @@ namespace ApiCheck.Test.Builder
       return this;
     }
 
+    public ApiMethodBuilder GenericParameter(string name = "T")
+    {
+      _genericParameters.Add(name);
+      return this;
+    }
+
     public ApiTypeBuilder Build()
     {
       if (_ctor)
@@ -76,6 +83,7 @@ namespace ApiCheck.Test.Builder
       {
         MethodBuilder methodBuilder = _parent.TypeBuilder.DefineMethod(_name, _methodAttributes, _returnType, _parameters.Select(parameter => parameter.Type).ToArray());
         DefineParameters(methodBuilder.DefineParameter);
+        DefineGenericParameters(methodBuilder.DefineGenericParameters);
         ILGenerator ilGenerator = methodBuilder.GetILGenerator();
         ilGenerator.Emit(ApiBuilderHelper.GetReturnOpCodeByType(_returnType));
         ilGenerator.Emit(OpCodes.Ret);
@@ -92,6 +100,14 @@ namespace ApiCheck.Test.Builder
         {
           parameterBuilder.SetConstant(parameter.DefaultValue);
         }
+      }
+    }
+
+    private void DefineGenericParameters(Func<string[], GenericTypeParameterBuilder[]> defineGenericParameter)
+    {
+      if (_genericParameters.Any())
+      {
+        defineGenericParameter(_genericParameters.ToArray());
       }
     }
 

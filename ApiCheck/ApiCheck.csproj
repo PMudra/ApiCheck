@@ -61,6 +61,7 @@
     <Compile Include="Comparer\Item.cs" />
     <Compile Include="Comparer\MethodComparer.cs" />
     <Compile Include="Comparer\MethodComparerBase.cs" />
+    <Compile Include="Comparer\MethodItem.cs" />
     <Compile Include="Comparer\PairList.cs" />
     <Compile Include="Comparer\ParameterComparer.cs" />
     <Compile Include="Comparer\PropertyComparer.cs" />
