@@ -25,7 +25,7 @@ namespace ApiCheck.Comparer
     {
       if (!Equals(ReferenceType.RawDefaultValue, NewType.RawDefaultValue))
       {
-        ComparerResult.AddChangedProperty("Default Value", ReferenceType.RawDefaultValue.ToString(), NewType.RawDefaultValue.ToString(), Severity.Error);
+        ComparerResult.AddChangedProperty("Default Value", (ReferenceType.RawDefaultValue ?? "null").ToString(), (NewType.RawDefaultValue ?? "null").ToString(), Severity.Error);
       }
     }
 
