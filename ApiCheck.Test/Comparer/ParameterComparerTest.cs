@@ -31,6 +31,16 @@ namespace ApiCheck.Test.Comparer
     }
 
     [Test]
+    public void When_default_flag_null_changed_should_report()
+    {
+      Assembly assembly1 = ApiBuilder.CreateApi().Class().Method().DefaultParameter(typeof(object), null).Build().Build().Build();
+      Assembly assembly2 = ApiBuilder.CreateApi().Class().Method().Parameter(typeof(object)).Build().Build().Build();
+      Mock<IComparerResult> sut = new Builder(assembly1, assembly2).ComparerResultMock;
+
+      sut.Verify(result => result.AddChangedProperty("Default Value", "null", "", Severity.Error), Times.Once);
+    }
+
+    [Test]
     public void When_name_changed_should_report()
     {
       Assembly assembly1 = ApiBuilder.CreateApi().Class().Method().Parameter(typeof(int), "myParam1").Build().Build().Build();
