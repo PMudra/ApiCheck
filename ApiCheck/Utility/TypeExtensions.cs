@@ -48,6 +48,10 @@ namespace ApiCheck.Utility
       {
         return string.Format("{0}.{1}<{2}>", type.Namespace, type.Name, string.Join(",", type.GetGenericArguments().Select(t => t.GetCompareableName())));
       }
+      if (type.IsArray)
+      {
+        return string.Format("{0}.{1}[{2}]", type.Namespace, type.Name, GetCompareableName(type.GetElementType()));
+      }
       return type.FullName;
     }
   }
