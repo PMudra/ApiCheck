@@ -34,13 +34,20 @@ using (AssemblyLoader assemblyLoader = new AssemblyLoader())
     // using the included AssemblyLoader that automatically resolves dependencies
     Assembly refAssembly = assemblyLoader.ReflectionOnlyLoad("MyReferenceVersion.dll");
     Assembly devAssembly = assemblyLoader.ReflectionOnlyLoad("MyDevelopmentVersion.dll");
+    // the comparer configuration specifies the severity levels of the changed API elements and which elements to ignore
+    ComparerConfiguration configuration = new ComparerConfiguration();
+    // all listed elements are not compared
+    configuration.Ignore.Add("Element.To.Be.Ignored");
+    // override the default severities
+    configuration.Severities.ParameterNameChanged = Severity.Warning;
+    configuration.Severities.AssemblyNameChanged = Severity.Hint;
     // easy setup of the ApiChecker using the builder pattern
     ApiChecker.CreateInstance(refAssembly, devAssembly)
-                // all listed elements are not compared
-              .WithIgnoreList(new[] {"Element.To.Be.Ignored"})
+              // configure the logging and the comparer 
+              .WithComparerConfiguration(configuration)
               .WithDetailLogging(s => WriteLine(s))
               .WithInfoLogging(s => WriteLine(s))
-                // write report to desired streams
+              // write report to desired streams
               .WithHtmlReport(new FileStream("report.html", FileMode.Create))
               .WithXmlReport(new FileStream("report.xml", FileMode.Create))
               .Build()     // creating the ApiChecker
@@ -51,7 +58,7 @@ using (AssemblyLoader assemblyLoader = new AssemblyLoader())
 ## Using the console application
 The console application provides basic parameters to run an API comparison. This application can be added to a CI build as Post-Build event.
 ```
-Usage: ApiCheck.Console.exe -r <reference assembly> -n <new assembly> [-x <xml report>] [-h <html report>] [-i <ignore file>] [-v]
+Usage: ApiCheck.Console.exe -r <reference assembly> -n <new assembly> [-x <xml report>] [-h <html report>] [-c <config file>] [-v]
 ```
 For more information run ```ApiCheck.Console.exe --help```
 ## Using the NUnit integration
@@ -60,7 +67,7 @@ Add a new class to your project like this:
 using ApiCheck.NUnit;
 namespace MyNamespace
 {
-    [ApiTest(@"Version1\ApiCheckTestProject.dll", @"Version2\ApiCheckTestProject.dll", Category = "ApiTest", IgnoreListPath = @"ignoreList.txt")]
+    [ApiTest(@"Version1\ApiCheckTestProject.dll", @"Version2\ApiCheckTestProject.dll", Category = "ApiTest", ComparerConfigurationPath = @"configuration.txt")]
     [ApiTest(@"Version1\ApiCheckTestProject.Extension.dll", @"Version2\ApiCheckTestProject.Extension.dll", Explicit = true)]
     public class ComparingApiTest : ApiTest
     {
@@ -68,14 +75,14 @@ namespace MyNamespace
 }
 ```
 ## Detected changes
-These are the changes in an api that are detected by the comparer:
+These are the changes in an API that are detected by the comparer:
 
 #### Assemblies
 Description | Before | After | Severity
 ----------- | ------ | ----- | --------
-assembly name | Company.MyAssembly | Company.YourAssembly | Error
-assembly version | 1.0.0.0 | 2.0.0.0 | Hint
-assembly public key token | B03F5F7F11D50A3A | 0A3AB03F5F7F11D5 | Error
+assembly name changed | Company.MyAssembly | Company.YourAssembly | Error
+assembly version changed | 1.0.0.0 | 2.0.0.0 | Hint
+assembly public key token  changed| B03F5F7F11D50A3A | 0A3AB03F5F7F11D5 | Error
 assembly culture | de-DE | en-US | Warning
 type removed | public class B { } | | Error
 type added | | public class B { } | Warning
@@ -86,12 +93,14 @@ nested type added | public class B { } | public class B { public class A { } } |
 Description | Before | After | Severity
 ----------- | ------ | ----- | --------
 enum changed | public enum E { } | public class E { } | Error
-abstract changes | public abstract class A { } | public class A { } | Error
-sealed changed | public sealed class A { } | public class A { } | Error
+static type changed | public static class A { } | public class A { } | Error
+abstract type changed | public abstract class A { } | public class A { } | Error
+sealed type changed | public sealed class A { } | public class A { } | Error
 interface changed | public interface I { } | public class I { } | Error
 serializable changed | [Serializable]public class S { } | public class S { } | Error
-interfaces removed | public class A : Interface { } | public class A { } | Error
 interfaces added | public class A { } | public class A : Interface { } | Warning
+interfaces removed | public class A : Interface { } | public class A { } | Error
+base added | public class A { } | public class A : AbstractClass { } | Warning
 base changed | public class A : AbstractClass { } | public class A { } | Error
 method added | | public int A() { } | Warning
 method removed | public int A() { } | | Error
@@ -107,11 +116,11 @@ field removed | public int i; | | Error
 #### Methods
 Description | Before | After | Severity
 ----------- | ------ | ----- | --------
-virtual changed | public virtual int A() | public int A() { } | Error
-static changed | public static int A() | public int A() { } | Error
-abstract changed | public abstract int A() | public int A() { } | Error
-sealed changed | public override sealed int A() | public int A() { } | Error
-return value changed | public int A() { } | public string A() { } | Error
+virtual method changed | public virtual int A() | public int A() { } | Error
+static method changed | public static int A() | public int A() { } | Error
+abstract method changed | public abstract int A() | public int A() { } | Error
+sealed method changed | public override sealed int A() | public int A() { } | Error
+return type changed | public int A() { } | public string A() { } | Error
 parameter name changed | public int A(int i) { } | public int A(int j) { } | Error
 default value changed | public int A(int i = 0) { } | public int A(int i = 1) { } | Error
 out changed | public int A(out int i) { } | public int A(ref int i) { } | Error
@@ -122,8 +131,37 @@ Description | Before | After | Severity
 property type changed | public int A {get; set;} | public string A {get;set;} | Error
 property setter changed | public int A {get; set;} | public int A {get;} | Error
 property getter changed | public int A {get; set;} | public int A {set;} | Error
-static changed | public static int A {get; set;} | public int A {ret; set;} | Error
+static property changed | public static int A {get; set;} | public int A {ret; set;} | Error
 event type changed | public event DelegateType MyEvent | public event NewDelegateType MyEvent | Error
-static changed | public static event DelegateType MyEvent | public event DelegateType MyEvent | Error
+static event changed | public static event DelegateType MyEvent | public event DelegateType MyEvent | Error
 field type changed | public int i | public string i | Error
-static changed | public static int i | public string i | Error
+static field changed | public static int i | public string i | Error
+const enum value changed | public const E i = E.X; | public const E i = E.Y; | Error
+
+
+## Comparison configuration
+The comparer can be configured by providing a [YAML](https://en.wikipedia.org/wiki/YAML) based configuration file. This configuration allows you to;
+  - Specify which elements to exclude from the comparison
+  - Override the default comparer severities
+
+#### Configuration format
+
+This is the format of the comparer configuration file:
+
+```
+---
+# ApiCheck comparer configuration for MyProject
+
+# specifies which elements to exclude from the comparison
+# these can be types or members, listed by their fully qualified name
+ignore:   
+  - MyCompany.MyNamespace.MyClass.SomeMember
+  - MyCompany.MyNamespace.MyClass2 # exclude MyClass2 because it changes a lot 
+
+# override the default comparer severities
+# the rule names match the descriptions from the table above in camelCase
+# the severity levels can be set to error/warning/hint
+severities:
+  parameterNameChanged: warning # globally set the check for changed parameter names to warning
+  assemblyNameChanged: hint
+```

@@ -41,9 +41,9 @@ namespace ApiCheck.NUnit
     public bool Explicit { get; set; }
 
     /// <summary>
-    /// Gets or sets the absolute or relative path for the ignored types. The file must contain elements separated by line breaks.
+    /// Gets or sets the absolute or relative path of the configuration file which contains the ignore list and check severities.
     /// </summary>
-    public string IgnoreListPath { get; set; }
+    public string ComparerConfigurationPath { get; set; }
 
     /// <summary>
     /// Gets or sets whether api check warnings should be handled as errors or not. If an error occurs the unit test will fail. This means setting this property to true will lead to failing unit tests if api check warnings occur.

@@ -27,15 +27,15 @@ namespace ApiCheck.Test.Console
       Assert.Throws<BadImageFormatException>(() => Builder.Create(newPath: @"TestProject\invalidDll.txt"));
       Assert.Throws<FileNotFoundException>(() => Builder.Create(referencePath: @"__Not__Found__"));
       Assert.Throws<FileNotFoundException>(() => Builder.Create(newPath: @"__Not__Found__"));
-      Assert.Throws<FileNotFoundException>(() => Builder.Create(ignorePath: @"__Not__Found__"));
+      Assert.Throws<FileNotFoundException>(() => Builder.Create(configPath: @"__Not__Found__"));
     }
 
     private static class Builder
     {
       public static Check Create(string referencePath = @"TestProject\Version1\ApiCheckTestProject.dll", string newPath = @"TestProject\Version2\ApiCheckTestProject.dll",
-                                string htmlPath = null, string xmlPath = null, string ignorePath = null, bool verbose = false)
+                                string htmlPath = null, string xmlPath = null, string configPath = null, bool verbose = false)
       {
-        return new Check(referencePath, newPath, htmlPath, xmlPath, ignorePath, verbose);
+        return new Check(referencePath, newPath, htmlPath, xmlPath, configPath, verbose);
       }
     }
   }

@@ -25,7 +25,7 @@ namespace ApiCheck.Comparer
     {
       if (!Equals(ReferenceType.RawDefaultValue, NewType.RawDefaultValue))
       {
-        ComparerResult.AddChangedProperty("Default Value", (ReferenceType.RawDefaultValue ?? "null").ToString(), (NewType.RawDefaultValue ?? "null").ToString(), Severity.Error);
+        ComparerResult.AddChangedProperty("Default Value", (ReferenceType.RawDefaultValue ?? "null").ToString(), (NewType.RawDefaultValue ?? "null").ToString(), Severities.DefaultValueChanged);
       }
     }
 
@@ -33,13 +33,13 @@ namespace ApiCheck.Comparer
     {
       if (ReferenceType.Name != NewType.Name)
       {
-        ComparerResult.AddChangedProperty("Name", ReferenceType.Name, NewType.Name, Severity.Error);
+        ComparerResult.AddChangedProperty("Name", ReferenceType.Name, NewType.Name, Severities.ParameterNameChanged);
       }
     }
 
     private void CompareAttributes()
     {
-      AddToResultIfNotEqual("Out", param => param.IsOut, Severity.Error);
+      AddToResultIfNotEqual("Out", param => param.IsOut, Severities.OutChanged);
     }
 
     private void AddToResultIfNotEqual(string propertyName, Func<ParameterInfo, bool> getFlag, Severity severity)

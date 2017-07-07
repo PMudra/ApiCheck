@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using ApiCheck.Configuration;
 
 namespace ApiCheck.NUnit
 {
@@ -46,9 +47,12 @@ namespace ApiCheck.NUnit
         {
           ApiTestAttribute apiTestAttribute = (ApiTestAttribute)customAttribute;
 
+          Stream comparerConfigurationStream = GetReadStream(apiTestAttribute.ComparerConfigurationPath);
+          ComparerConfiguration comparerConfiguration = ConfigurationLoader.LoadComparerConfiguration(comparerConfigurationStream);
+
           ApiComparer apiComparer = ApiComparer.CreateInstance(assemblyLoader.ReflectionOnlyLoad(apiTestAttribute.ReferenceVersionPath),
                                                                assemblyLoader.ReflectionOnlyLoad(apiTestAttribute.NewVersionPath))
-                                                               .WithIgnoreList(IgnoreListLoader.LoadIgnoreList(GetReadStream(apiTestAttribute.IgnoreListPath)))
+                                                               .WithComparerConfiguration(comparerConfiguration)
                                                                .Build();
           apiComparer.CheckApi();
           yield return new ApiTestData(apiComparer.ComparerResult, apiTestAttribute.Category, apiTestAttribute.Explicit, apiTestAttribute.HandleWarningsAsErrors);

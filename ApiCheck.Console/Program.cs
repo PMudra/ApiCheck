@@ -12,7 +12,7 @@ namespace ApiCheck.Console
       {
         try
         {
-          returnValue = new Check(options.ReferencePath, options.NewPath, options.HtmlPath, options.XmlPath, options.IgnorePath, options.Verbose).CheckAssemblies();
+          returnValue = new Check(options.ReferencePath, options.NewPath, options.HtmlPath, options.XmlPath, options.ConfigPath, options.Verbose).CheckAssemblies();
         }
         catch (Exception exception)
         {
