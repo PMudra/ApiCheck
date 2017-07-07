@@ -1,4 +1,5 @@
-﻿using ApiCheck.Comparer;
+﻿using System;
+using ApiCheck.Comparer;
 using ApiCheck.Result;
 using ApiCheck.Test.Builder;
 using NUnit.Framework;
@@ -18,6 +19,17 @@ namespace ApiCheck.Test.Comparer
       IComparerResult sut = new Builder(assembly1, assembly2, new[] { "A.C" }).Build();
 
       Assert.AreEqual(0, sut.RemovedItems.Count());
+    }
+
+    [Test]
+    public void When_interface_extension_is_removed_and_ignored_should_not_report()
+    {
+      Assembly assembly1 = ApiBuilder.CreateApi().Interface(interfaces: new[] { typeof(IDisposable) }).Build().Build();
+      Assembly assembly2 = ApiBuilder.CreateApi().Interface().Build().Build();
+      var sut = new Builder(assembly1, assembly2, new[] { "System.IDisposable" }).Build();
+
+      Assert.AreEqual(0, sut.ComparerResults.First().RemovedItems.Count());
+      Assert.AreEqual(0, sut.ComparerResults.First().AddedItems.Count());
     }
 
     [Test]

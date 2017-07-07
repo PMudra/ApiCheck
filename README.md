@@ -4,17 +4,17 @@
 
 ApiCheck is a library that compares different versions of an API using reflection to ensure compatibility with third party components. This project contains three components: the library, the console application and the NUnit integration.
 
-##Features
+## Features
 * Comparing .NET assemblies.
 * **Detection** of changed API elements such as types, methods, properties and more.
 * **Reporting** results as XML or HTML files.
 * **Console application** that can be used in CI environment.
 * **NUnit integration** for nice analysis of the results of the comparison.
 
-##CI Build
+## CI Build
 [![Build status](https://ci.appveyor.com/api/projects/status/b4uq1f6d2n91c8fv)](https://ci.appveyor.com/project/PMudra/apicheck)
 [![NuGet status](http://img.shields.io/nuget/v/ApiCheck.svg)](http://www.nuget.org/packages/ApiCheck/)
-##Installing via NuGet
+## Installing via NuGet
 Installing the library to your project (referencing ApiCheck.dll):
 ```
 Install-Package ApiCheck
@@ -27,7 +27,7 @@ Installing the NUnit integration to your project. This package depends on ApiChe
 ```
 Install-Package ApiCheck.NUnit
 ```
-##Using the ApiCheck Library
+## Using the ApiCheck Library
 ```csharp
 using (AssemblyLoader assemblyLoader = new AssemblyLoader())
 {
@@ -48,13 +48,13 @@ using (AssemblyLoader assemblyLoader = new AssemblyLoader())
 }
 ```
 
-##Using the console application
+## Using the console application
 The console application provides basic parameters to run an API comparison. This application can be added to a CI build as Post-Build event.
 ```
 Usage: ApiCheck.Console.exe -r <reference assembly> -n <new assembly> [-x <xml report>] [-h <html report>] [-i <ignore file>] [-v]
 ```
 For more information run ```ApiCheck.Console.exe --help```
-##Using the NUnit integration
+## Using the NUnit integration
 Add a new class to your project like this:
 ```csharp
 using ApiCheck.NUnit;
@@ -67,10 +67,10 @@ namespace MyNamespace
     }
 }
 ```
-##Detected changes
+## Detected changes
 These are the changes in an api that are detected by the comparer:
 
-####Assemblies
+#### Assemblies
 Description | Before | After | Severity
 ----------- | ------ | ----- | --------
 assembly name | Company.MyAssembly | Company.YourAssembly | Error
@@ -82,7 +82,7 @@ type added | | public class B { } | Warning
 nested type removed | public class B { public class A { } } | public class B { } | Error
 nested type added | public class B { } | public class B { public class A { } } | Warning
 
-####Types
+#### Types
 Description | Before | After | Severity
 ----------- | ------ | ----- | --------
 enum changed | public enum E { } | public class E { } | Error
@@ -104,7 +104,7 @@ event removed | public event DelegateType MyEvent | | Error
 field added | | public int i; | Warning
 field removed | public int i; | | Error
 
-####Methods
+#### Methods
 Description | Before | After | Severity
 ----------- | ------ | ----- | --------
 virtual changed | public virtual int A() | public int A() { } | Error
@@ -116,7 +116,7 @@ parameter name changed | public int A(int i) { } | public int A(int j) { } | Err
 default value changed | public int A(int i = 0) { } | public int A(int i = 1) { } | Error
 out changed | public int A(out int i) { } | public int A(ref int i) { } | Error
 
-####Properties, Events & Fields
+#### Properties, Events & Fields
 Description | Before | After | Severity
 ----------- | ------ | ----- | --------
 property type changed | public int A {get; set;} | public string A {get;set;} | Error

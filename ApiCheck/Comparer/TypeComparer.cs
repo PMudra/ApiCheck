@@ -119,8 +119,8 @@ namespace ApiCheck.Comparer
 
     private void CompareInterfaces()
     {
-      IEnumerable<string> referenceInterfaces = ReferenceType.GetInterfaces().Select(@interface => @interface.GetCompareableName()).ToList();
-      IEnumerable<string> newInterfaces = NewType.GetInterfaces().Select(@interface => @interface.GetCompareableName()).ToList();
+      IEnumerable<string> referenceInterfaces = GetInterfaces(ReferenceType).ToList();
+      IEnumerable<string> newInterfaces = GetInterfaces(NewType).ToList();
 
       // missing interfaces
       foreach (string @interface in referenceInterfaces.Except(newInterfaces))
@@ -133,6 +133,11 @@ namespace ApiCheck.Comparer
       {
         ComparerResult.AddAddedItem(ResultContext.Interface, @interface, Severity.Warning);
       }
+    }
+
+    private IEnumerable<string> GetInterfaces(TypeInfo typeInfo)
+    {
+      return typeInfo.GetInterfaces().Where(@interface => ComparerContext.IsNotIgnored(@interface.GetTypeInfo())).Select(@interface => @interface.GetCompareableName());
     }
 
     private void CompareEvents()
