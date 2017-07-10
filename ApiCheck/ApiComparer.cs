@@ -3,10 +3,10 @@ using ApiCheck.Report;
 using ApiCheck.Result;
 using ApiCheck.Result.Difference;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Xml.Linq;
+using ApiCheck.Configuration;
 
 namespace ApiCheck
 {
@@ -21,13 +21,13 @@ namespace ApiCheck
     private readonly Stream _xmlOutput;
     private readonly IComparerContext _comparerContext;
 
-    private ApiComparer(Assembly referenceVersion, Assembly newVersion, Action<string> logInfo, Action<string> logDetail, Stream htmlOutput, Stream xmlOutput, IList<string> ignoredElements)
+    private ApiComparer(Assembly referenceVersion, Assembly newVersion, Action<string> logInfo, Action<string> logDetail, Stream htmlOutput, Stream xmlOutput, ComparerConfiguration configuration)
     {
       _referenceVersion = referenceVersion;
       _newVersion = newVersion;
       _htmlOutput = htmlOutput;
       _xmlOutput = xmlOutput;
-      _comparerContext = new ComparerContext(logInfo, logDetail, ignoredElements);
+      _comparerContext = new ComparerContext(logInfo, logDetail, configuration);
     }
 
     /// <summary> Compares the versions of the API and generates the desired reports. </summary>
@@ -85,7 +85,7 @@ namespace ApiCheck
       private Action<string> _logDetail;
       private Stream _htmlReport;
       private Stream _xmlReport;
-      private IList<string> _ignoredElements;
+      private ComparerConfiguration _configuration;
 
       internal ApiComparerBuilder(Assembly referenceVersion, Assembly newVersion)
       {
@@ -137,14 +137,14 @@ namespace ApiCheck
         return this;
       }
 
-      /// <summary> Sets a list of ignored types, methods, constructors, properties, events and fields. </summary>
+      /// <summary> Sets the comparer configuration. </summary>
       ///
-      /// <param name="ignoredElements">  The list containing the full name of the elements to be ignored. </param>
+      /// <param name="configuration">  The configuration used by the comparer. </param>
       ///
       /// <returns> The instance of the builder. </returns>
-      public ApiComparerBuilder WithIgnoreList(IList<string> ignoredElements)
+      public ApiComparerBuilder WithComparerConfiguration(ComparerConfiguration configuration)
       {
-        _ignoredElements = ignoredElements;
+        _configuration = configuration;
         return this;
       }
 
@@ -153,7 +153,7 @@ namespace ApiCheck
       /// <returns> The instance of the <see cref="ApiComparer"/>. </returns>
       public ApiComparer Build()
       {
-        return new ApiComparer(_referenceVersion, _newVersion, _logInfo ?? (s => { }), _logDetail ?? (s => { }), _htmlReport, _xmlReport, _ignoredElements ?? new List<string>());
+        return new ApiComparer(_referenceVersion, _newVersion, _logInfo ?? (s => { }), _logDetail ?? (s => { }), _htmlReport, _xmlReport, _configuration ?? new ComparerConfiguration());
       }
     }
   }

@@ -44,6 +44,10 @@
     <Reference Include="System.Core" />
     <Reference Include="System.XML" />
     <Reference Include="System.Xml.Linq" />
+    <Reference Include="YamlDotNet, Version=4.2.1.0, Culture=neutral, PublicKeyToken=ec19458f3c15af5e, processorArchitecture=MSIL">
+      <HintPath>..\packages\YamlDotNet.Signed.4.2.1\lib\net35\YamlDotNet.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\SolutionInfo.cs">
@@ -66,8 +70,10 @@
     <Compile Include="Comparer\ParameterComparer.cs" />
     <Compile Include="Comparer\PropertyComparer.cs" />
     <Compile Include="Comparer\TypeComparer.cs" />
+    <Compile Include="Configuration\ComparerConfiguration.cs" />
+    <Compile Include="Configuration\Severities.cs" />
     <Compile Include="Loader\AssemblyLoader.cs" />
-    <Compile Include="Loader\IgnoreListLoader.cs" />
+    <Compile Include="Loader\ConfigurationLoader.cs" />
     <Compile Include="Report\XmlGenerator.cs" />
     <Compile Include="Report\XmlTransformer.cs" />
     <Compile Include="Result\Difference\Changed.cs" />
@@ -98,6 +104,9 @@
       <Link>NOTICE.txt</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />

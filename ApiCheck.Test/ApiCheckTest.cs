@@ -55,7 +55,7 @@ namespace ApiCheck.Test
       Assembly assembly1 = ApiBuilder.CreateApi().Build();
       Assembly assembly2 = ApiBuilder.CreateApi().Build();
       Assert.DoesNotThrow(
-        () => ApiComparer.CreateInstance(assembly1, assembly2).WithDetailLogging(null).WithHtmlReport(null).WithIgnoreList(null).WithInfoLogging(null).WithXmlReport(null).Build().CheckApi());
+        () => ApiComparer.CreateInstance(assembly1, assembly2).WithDetailLogging(null).WithHtmlReport(null).WithComparerConfiguration(null).WithInfoLogging(null).WithXmlReport(null).Build().CheckApi());
     }
 
     [Test]

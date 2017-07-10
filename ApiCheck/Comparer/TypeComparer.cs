@@ -37,17 +37,17 @@ namespace ApiCheck.Comparer
       if (ReferenceType.BaseType == null)
       {
         // Adding a base class is subclass warning
-        AddToResultIfNotEqual("Base", referenceBase, newBase, Severity.Warning);
+        AddToResultIfNotEqual("Base", referenceBase, newBase, Severities.BaseAdded);
       }
       else if (ReferenceType.BaseType != null && NewType.BaseType != null && IsSubclassOf(NewType.BaseType.BaseType, referenceBase))
       {
         // Adding a new base class that extends the old one is subclass warning
-        AddToResultIfNotEqual("Base", referenceBase, newBase, Severity.Warning);
+        AddToResultIfNotEqual("Base", referenceBase, newBase, Severities.BaseAdded);
       }
       else
       {
         // Everything else should be an error or the base class didn't change
-        AddToResultIfNotEqual("Base", referenceBase, newBase, Severity.Error);
+        AddToResultIfNotEqual("Base", referenceBase, newBase, Severities.BaseChanged);
       }
     }
 
@@ -72,12 +72,12 @@ namespace ApiCheck.Comparer
 
       foreach (MethodItem item in pairList.RemovedItems)
       {
-        ComparerResult.AddRemovedItem(resultContext, item.Method.ToString(), Severity.Error);
+        ComparerResult.AddRemovedItem(resultContext, item.Method.ToString(), Severities.MethodRemoved);
       }
 
       foreach (MethodItem item in pairList.AddedItems)
       {
-        ComparerResult.AddAddedItem(resultContext, item.Method.ToString(), Severity.Warning);
+        ComparerResult.AddAddedItem(resultContext, item.Method.ToString(), Severities.MethodAdded);
       }
 
       foreach (ItemPair<MethodItem> itemPair in pairList.EqualItems)
@@ -96,13 +96,13 @@ namespace ApiCheck.Comparer
       // missing fields
       foreach (string field in referenceFields.Except(newFields))
       {
-        ComparerResult.AddRemovedItem(ResultContext.Field, field, Severity.Error);
+        ComparerResult.AddRemovedItem(ResultContext.Field, field, Severities.FieldRemoved);
       }
 
       // new fields
       foreach (string field in newFields.Except(referenceFields))
       {
-        ComparerResult.AddAddedItem(ResultContext.Field, field, Severity.Warning);
+        ComparerResult.AddAddedItem(ResultContext.Field, field, Severities.FieldAdded);
       }
 
       // equal fields
@@ -125,13 +125,13 @@ namespace ApiCheck.Comparer
       // missing interfaces
       foreach (string @interface in referenceInterfaces.Except(newInterfaces))
       {
-        ComparerResult.AddRemovedItem(ResultContext.Interface, @interface, Severity.Error);
+        ComparerResult.AddRemovedItem(ResultContext.Interface, @interface, Severities.InterfacesRemoved);
       }
 
       // new interfaces
       foreach (string @interface in newInterfaces.Except(referenceInterfaces))
       {
-        ComparerResult.AddAddedItem(ResultContext.Interface, @interface, Severity.Warning);
+        ComparerResult.AddAddedItem(ResultContext.Interface, @interface, Severities.InterfacesAdded);
       }
     }
 
@@ -148,13 +148,13 @@ namespace ApiCheck.Comparer
       // missing event
       foreach (string @event in referenceEvents.Except(newEvents))
       {
-        ComparerResult.AddRemovedItem(ResultContext.Event, @event, Severity.Error);
+        ComparerResult.AddRemovedItem(ResultContext.Event, @event, Severities.EventRemoved);
       }
 
       // new event
       foreach (string @event in newEvents.Except(referenceEvents))
       {
-        ComparerResult.AddAddedItem(ResultContext.Event, @event, Severity.Warning);
+        ComparerResult.AddAddedItem(ResultContext.Event, @event, Severities.EventAdded);
       }
 
       // equal events
@@ -178,12 +178,12 @@ namespace ApiCheck.Comparer
 
       foreach (Item property in pairList.RemovedItems)
       {
-        ComparerResult.AddRemovedItem(ResultContext.Property, ReferenceType.GetApiProperty(property.Name, property.Types).ToString(), Severity.Error);
+        ComparerResult.AddRemovedItem(ResultContext.Property, ReferenceType.GetApiProperty(property.Name, property.Types).ToString(), Severities.PropertyRemoved);
       }
 
       foreach (Item property in pairList.AddedItems)
       {
-        ComparerResult.AddAddedItem(ResultContext.Property, NewType.GetApiProperty(property.Name, property.Types).ToString(), Severity.Warning);
+        ComparerResult.AddAddedItem(ResultContext.Property, NewType.GetApiProperty(property.Name, property.Types).ToString(), Severities.PropertyAdded);
       }
 
       foreach (ItemPair<Item> property in pairList.EqualItems)
@@ -203,16 +203,16 @@ namespace ApiCheck.Comparer
     {
       if (ReferenceType.IsEnum != NewType.IsEnum)
       {
-        ComparerResult.AddChangedFlag("Enum", ReferenceType.IsEnum, Severity.Error);
+        ComparerResult.AddChangedFlag("Enum", ReferenceType.IsEnum, Severities.EnumChanged);
       }
-      AddToResultIfNotEqual("Static", TypeAttributes.Sealed | TypeAttributes.Abstract, Severity.Error);
+      AddToResultIfNotEqual("Static", TypeAttributes.Sealed | TypeAttributes.Abstract, Severities.StaticTypeChanged);
       if (ComparerResult.ChangedFlags.All(change => change.PropertyName != "Static"))
       {
-        AddToResultIfNotEqual("Abstract", TypeAttributes.Abstract, Severity.Error);
-        AddToResultIfNotEqual("Sealed", TypeAttributes.Sealed, Severity.Error);
+        AddToResultIfNotEqual("Abstract", TypeAttributes.Abstract, Severities.AbstractTypeChanged);
+        AddToResultIfNotEqual("Sealed", TypeAttributes.Sealed, Severities.SealedTypeChanged);
       }
-      AddToResultIfNotEqual("Interface", TypeAttributes.Interface, Severity.Error);
-      AddToResultIfNotEqual("Serializable", TypeAttributes.Serializable, Severity.Error);
+      AddToResultIfNotEqual("Interface", TypeAttributes.Interface, Severities.InterfaceChanged);
+      AddToResultIfNotEqual("Serializable", TypeAttributes.Serializable, Severities.SerializableChanged);
     }
 
     private void AddToResultIfNotEqual(string propertyName, TypeAttributes typeAttribute, Severity severity)

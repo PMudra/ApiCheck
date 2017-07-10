@@ -17,8 +17,8 @@ namespace ApiCheck.Console
     [Option('x', "xml", HelpText = "A relative or absolute path for a xml report file. If the file exists it will be overridden.")]
     public string XmlPath { get; set; }
 
-    [Option('i', "ignore", HelpText = "A relative or absolute path for a text file containing the names of the types to ignore.")]
-    public string IgnorePath { get; set; }
+    [Option('c', "config", HelpText = "A relative or absolute path for a comparer configuration file containing the severity levels of the changed API elements and which elements to ignore.")]
+    public string ConfigPath { get; set; }
 
     [Option('v', "verbose", HelpText = "Runs comparer with logging and prints information to the console.")]
     public bool Verbose { get; set; }
@@ -31,7 +31,7 @@ namespace ApiCheck.Console
         AdditionalNewLineAfterOption = true,
         AddDashesToOption = true
       };
-      helpText.AddPreOptionsLine("Usage: ApiCheck.Console.exe -r <reference assembly> -n <new assembly> [-x <xml report>] [-h <html report>] [-i <ignore file>] [-v]");
+      helpText.AddPreOptionsLine("Usage: ApiCheck.Console.exe -r <reference assembly> -n <new assembly> [-x <xml report>] [-h <html report>] [-c <config file>] [-v]");
       helpText.AddOptions(this);
       return helpText;
     }

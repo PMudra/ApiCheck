@@ -1,6 +1,7 @@
 ﻿using ApiCheck.Result;
 using System;
 using System.Reflection;
+using ApiCheck.Configuration;
 
 namespace ApiCheck.Comparer
 {
@@ -8,6 +9,7 @@ namespace ApiCheck.Comparer
   {
     Action<string> LogInfo { get; }
     Action<string> LogDetail { get; }
+    Severities Severities { get; }
     IComparerResult CreateComparerResult(ResultContext resultContext, string name);
     IComparer CreateComparer(object referenceObject, object newObject);
     bool IsNotIgnored(TypeInfo typeInfo);

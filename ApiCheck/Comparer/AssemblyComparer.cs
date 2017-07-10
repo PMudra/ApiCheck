@@ -27,10 +27,10 @@ namespace ApiCheck.Comparer
     {
       AssemblyName referenceName = new AssemblyName(ReferenceType.FullName);
       AssemblyName newName = new AssemblyName(NewType.FullName);
-      AddToResultIfNotEqual("Name", referenceName.Name, newName.Name, Severity.Error);
-      AddToResultIfNotEqual("Version", referenceName.Version.ToString(), newName.Version.ToString(), Severity.Hint);
-      AddToResultIfNotEqual("Culture", referenceName.CultureInfo.Name, newName.CultureInfo.Name, Severity.Warning);
-      AddToResultIfNotEqual("Public Key Token", ConvertToHexString(referenceName.GetPublicKeyToken()), ConvertToHexString(newName.GetPublicKeyToken()), Severity.Error);
+      AddToResultIfNotEqual("Name", referenceName.Name, newName.Name, Severities.AssemblyNameChanged);
+      AddToResultIfNotEqual("Version", referenceName.Version.ToString(), newName.Version.ToString(), Severities.AssemblyVersionChanged);
+      AddToResultIfNotEqual("Culture", referenceName.CultureInfo.Name, newName.CultureInfo.Name, Severities.AssemblyCultureChanged);
+      AddToResultIfNotEqual("Public Key Token", ConvertToHexString(referenceName.GetPublicKeyToken()), ConvertToHexString(newName.GetPublicKeyToken()), Severities.AssemblyPublicKeyTokenChanged);
     }
 
     private void CompareTypes()
@@ -41,13 +41,13 @@ namespace ApiCheck.Comparer
       // Missing types
       foreach (string type in referenceTypes.Except(newTypes))
       {
-        ComparerResult.AddRemovedItem(GetItemType(ReferenceType.GetType(type)), type, Severity.Error);
+        ComparerResult.AddRemovedItem(GetItemType(ReferenceType.GetType(type)), type, Severities.TypeRemoved);
       }
 
       // New types
       foreach (string type in newTypes.Except(referenceTypes))
       {
-        ComparerResult.AddAddedItem(GetItemType(NewType.GetType(type)), type, Severity.Warning);
+        ComparerResult.AddAddedItem(GetItemType(NewType.GetType(type)), type, Severities.TypeAdded);
       }
 
       // Equal types

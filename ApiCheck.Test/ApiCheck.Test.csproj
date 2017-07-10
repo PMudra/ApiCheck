@@ -48,6 +48,10 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
+    <Reference Include="YamlDotNet, Version=4.2.1.0, Culture=neutral, PublicKeyToken=ec19458f3c15af5e, processorArchitecture=MSIL">
+      <HintPath>..\packages\YamlDotNet.Signed.4.2.1\lib\net35\YamlDotNet.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\SolutionInfo.cs">
@@ -70,7 +74,7 @@
     <Compile Include="Comparer\PropertyComparerTest.cs" />
     <Compile Include="Comparer\TypeComparerTest.cs" />
     <Compile Include="Console\CheckTest.cs" />
-    <Compile Include="Loader\IgnoreListLoaderTest.cs" />
+    <Compile Include="Loader\ConfigurationLoaderTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Report\XmlGeneratorTest.cs" />
     <Compile Include="Report\XmlTransformerTest.cs" />
@@ -99,6 +103,9 @@
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="TestProvider\ExampleConfiguration.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="TestProject\invalidDll.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -108,7 +115,7 @@
     <Content Include="TestProject\Version2\ApiCheckTestProject.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="TestProvider\ignore.txt">
+    <Content Include="TestProvider\TestProjectConfiguration.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

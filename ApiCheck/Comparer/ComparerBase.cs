@@ -1,5 +1,6 @@
 ﻿using ApiCheck.Result;
 using System;
+using ApiCheck.Configuration;
 
 namespace ApiCheck.Comparer
 {
@@ -36,6 +37,11 @@ namespace ApiCheck.Comparer
     protected IComparerResult ComparerResult
     {
       get { return _comparerResult; }
+    }
+
+    protected Severities Severities
+    {
+      get { return ComparerContext.Severities; }
     }
 
     public abstract IComparerResult Compare();

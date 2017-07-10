@@ -3,6 +3,7 @@ using ApiCheck.Utility;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using ApiCheck.Configuration;
 
 namespace ApiCheck.Comparer
 {
@@ -11,12 +12,14 @@ namespace ApiCheck.Comparer
     private readonly Action<string> _logInfo;
     private readonly Action<string> _logDetail;
     private readonly IList<string> _ignoredElements;
+    private readonly Severities _severities;
 
-    public ComparerContext(Action<string> logInfo, Action<string> logDetail, IList<string> ignoredElements)
+    public ComparerContext(Action<string> logInfo, Action<string> logDetail, ComparerConfiguration configuration)
     {
       _logInfo = logInfo;
       _logDetail = logDetail;
-      _ignoredElements = ignoredElements;
+      _ignoredElements = configuration.Ignore;
+      _severities = configuration.Severities;
     }
 
     public Action<string> LogInfo
@@ -27,6 +30,11 @@ namespace ApiCheck.Comparer
     public Action<string> LogDetail
     {
       get { return _logDetail; }
+    }
+
+    public Severities Severities
+    {
+      get { return _severities; }
     }
 
     public IComparerResult CreateComparerResult(ResultContext resultContext, string name)

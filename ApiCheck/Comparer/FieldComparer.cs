@@ -1,5 +1,4 @@
 ﻿using ApiCheck.Result;
-using ApiCheck.Result.Difference;
 using ApiCheck.Utility;
 using System;
 using System.Reflection;
@@ -18,11 +17,11 @@ namespace ApiCheck.Comparer
       ComparerContext.LogDetail(string.Format("Comparing field '{0}'", ReferenceType));
       if (ReferenceType.FieldType.GetCompareableName() != NewType.FieldType.GetCompareableName())
       {
-        ComparerResult.AddChangedProperty("Type", ReferenceType.FieldType.GetCompareableName(), NewType.FieldType.GetCompareableName(), Severity.Error);
+        ComparerResult.AddChangedProperty("Type", ReferenceType.FieldType.GetCompareableName(), NewType.FieldType.GetCompareableName(), Severities.FieldTypeChanged);
       }
       if (ReferenceType.IsStatic != NewType.IsStatic)
       {
-        ComparerResult.AddChangedFlag("Static", ReferenceType.IsStatic, Severity.Error);
+        ComparerResult.AddChangedFlag("Static", ReferenceType.IsStatic, Severities.StaticFieldChanged);
       }
       if (ReferenceType.IsStatic && NewType.IsStatic && ReferenceType.FieldType.IsEnum)
       {
@@ -31,7 +30,7 @@ namespace ApiCheck.Comparer
         object newValue = NewType.GetRawConstantValue();
         if (Convert.ToInt32(referenceValue) != Convert.ToInt32(newValue))
         {
-          ComparerResult.AddChangedProperty("Value", referenceValue.ToString(), newValue.ToString(), Severity.Error);
+          ComparerResult.AddChangedProperty("Value", referenceValue.ToString(), newValue.ToString(), Severities.ConstEnumValueChanged);
         }
       }
       return ComparerResult;
