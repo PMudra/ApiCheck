@@ -1,0 +1,14 @@
+﻿# ApiCheck comparer configuration for MyProject
+
+# specifies which elements to exclude from the comparison
+# these can be types or members, listed by their fully qualified name
+ignore:   
+    - MyCompany.MyNamespace.MyClass.SomeMember
+    - MyCompany.MyNamespace.MyClass2 # exclude MyClass2 because it changes a lot 
+
+# override the default comparer severities
+# the rule names match the descriptions from the table above in camelCase
+# the severity levels can be set to error/warning/hint
+severities:
+    parameterNameChanged: warning # globally set the check for changed parameter names to warning
+    assemblyNameChanged: hint

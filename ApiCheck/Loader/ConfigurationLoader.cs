@@ -9,18 +9,20 @@ namespace ApiCheck.Loader
   {
     public static ComparerConfiguration LoadComparerConfiguration(Stream stream)
     {
-      if (stream == null)
+      if (stream == null || stream.Length == 0)
       {
         return new ComparerConfiguration();
       }
 
       using (var reader = new StreamReader(stream))
       {
-        var deserializer = new DeserializerBuilder()
+        Deserializer deserializer = new DeserializerBuilder()
           .WithNamingConvention(new CamelCaseNamingConvention())
           .Build();
 
-        return deserializer.Deserialize<ComparerConfiguration>(reader);
+        ComparerConfiguration configuration = deserializer.Deserialize<ComparerConfiguration>(reader);
+
+        return configuration ?? new ComparerConfiguration();
       }
     }
   }
