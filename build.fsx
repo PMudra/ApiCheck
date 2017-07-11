@@ -69,6 +69,8 @@ Target "NuGet" (fun _ ->
         | "ApiCheck" ->
             CopyFile libDir (buildDir @@ "ApiCheck.dll")
             CopyFile libDir (buildDir @@ "ApiCheck.XML")
+            CopyFile libDir (buildDir @@ "YamlDotNet.dll")
+            CopyFile libDir (buildDir @@ "YamlDotNet.XML")
         | "ApiCheck.NUnit" ->
             CopyFile libDir (buildDir @@ "ApiCheck.NUnit.dll")
             CopyFile libDir (buildDir @@ "ApiCheck.NUnit.XML")
