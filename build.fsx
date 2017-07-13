@@ -18,13 +18,9 @@ let tags = "ApiCheck Assembly Comparer NUnit Different Version Build Integration
 let globalDescription = "Library comparing different versions of an api using reflection to ensure compatibility with third party components."
 
 let packages =
-    ["ApiCheck", globalDescription,
-     ["YamlDotNet.Signed", "4.2.1"]
-     "ApiCheck.Console", globalDescription + " Console application.",
-     ["CommandLineParser", "1.9.71"]
-     "ApiCheck.NUnit", globalDescription + " NUnit integration.",
-     ["ApiCheck", version
-      "NUnit", "2.6.4"]]
+    [ "ApiCheck", globalDescription, ["YamlDotNet.Signed", "4.2.1"]
+      "ApiCheck.Console", globalDescription + " Console application.", []
+      "ApiCheck.NUnit", globalDescription + " NUnit integration.", ["ApiCheck", version; "NUnit", "2.6.4"] ]
 
 Target "Clean" (fun _ ->
     CleanDirs [buildDir; deployDir; packagingDir]
@@ -78,6 +74,8 @@ Target "NuGet" (fun _ ->
             CopyFile toolDir (buildDir @@ "ApiCheck.dll")
             CopyFile toolDir (buildDir @@ "ApiCheck.Console.exe")
             CopyFile toolDir (buildDir @@ "ApiCheck.Console.exe.config")
+            CopyFile toolDir (buildDir @@ "CommandLine.dll")
+            CopyFile toolDir (buildDir @@ "YamlDotNet.dll")
         | _ -> ()
         NuGet (fun p ->
             {p with
