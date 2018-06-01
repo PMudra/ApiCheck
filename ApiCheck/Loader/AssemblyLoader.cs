@@ -24,7 +24,7 @@ namespace ApiCheck.Loader
       {
         return Assembly.ReflectionOnlyLoadFrom(path);
       }
-      return Assembly.ReflectionOnlyLoad(args.Name);
+      return Assembly.ReflectionOnlyLoad(AppDomain.CurrentDomain.ApplyPolicy(args.Name));
     }
 
     public Assembly ReflectionOnlyLoad(string path)
