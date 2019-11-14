@@ -186,6 +186,16 @@ namespace ApiCheck.Test.Comparer
       sut.Verify(result => result.AddComparerResult(It.IsAny<IComparerResult>()), Times.AtLeastOnce);
     }
 
+    [Test]
+    public void When_defining_two_methods_with_different_generic_parameters_should_compare_without_exception()
+    {
+      Assembly assembly1 = ApiBuilder.CreateApi().Class().Method().GenericParameter().Build().Method().GenericParameter("B").Build().Build().Build();
+      Assembly assembly2 = ApiBuilder.CreateApi().Class().Method().GenericParameter().Build().Method().GenericParameter("B").Build().Build().Build();
+    
+      Mock<IComparerResult> sut;
+      Assert.DoesNotThrow(() => sut = new Builder(assembly1, assembly2).ComparerResultMock);
+    }
+
     private class Builder
     {
       private readonly Mock<IComparerResult> _comparerResultMock;
