@@ -20,11 +20,25 @@ namespace ApiCheck.Comparer
       }
       if ((ReferenceType.CanWrite && ReferenceType.SetMethod.IsPublic) != (NewType.CanWrite && NewType.SetMethod.IsPublic))
       {
-        ComparerResult.AddChangedFlag("Setter", ReferenceType.CanWrite, Severities.PropertySetterChanged);
+          if (ReferenceType.CanWrite && ReferenceType.SetMethod.IsPublic)
+          {
+              ComparerResult.AddRemovedItem(ResultContext.Property, ReferenceType.Name, Severities.PropertySetterRemoved);
+          }
+          else
+          {
+              ComparerResult.AddChangedFlag("Setter", ReferenceType.CanWrite, Severities.PropertySetterChanged);
+          }
       }
       if ((ReferenceType.CanRead && ReferenceType.GetMethod.IsPublic) != (NewType.CanRead && NewType.GetMethod.IsPublic))
       {
-        ComparerResult.AddChangedFlag("Getter", ReferenceType.CanRead, Severities.PropertyGetterChanged);
+          if (ReferenceType.CanRead && ReferenceType.GetMethod.IsPublic)
+          {
+              ComparerResult.AddRemovedItem(ResultContext.Property, ReferenceType.Name, Severities.PropertyGetterRemoved);
+          }
+          else
+          {
+              ComparerResult.AddChangedFlag("Getter", ReferenceType.CanRead, Severities.PropertyGetterChanged);
+          }
       }
       bool referenceStatic = (ReferenceType.GetMethod != null && ReferenceType.GetMethod.IsStatic) || (ReferenceType.SetMethod != null && ReferenceType.SetMethod.IsStatic);
       bool newStatic = (NewType.GetMethod != null && NewType.GetMethod.IsStatic) || (NewType.SetMethod != null && NewType.SetMethod.IsStatic);
