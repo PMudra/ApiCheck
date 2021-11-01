@@ -18,13 +18,32 @@ namespace ApiCheck.Comparer
       {
         ComparerResult.AddChangedProperty("Type", ReferenceType.PropertyType.GetCompareableName(), NewType.PropertyType.GetCompareableName(), Severities.PropertyTypeChanged);
       }
-      if ((ReferenceType.CanWrite && ReferenceType.SetMethod.IsPublic) != (NewType.CanWrite && NewType.SetMethod.IsPublic))
+
+      bool referenceCanWriteAndIsPublic = ReferenceType.CanWrite && ReferenceType.SetMethod.IsPublic;
+      bool newCanWriteAndIsPublic = NewType.CanWrite && NewType.SetMethod.IsPublic;
+      if (referenceCanWriteAndIsPublic != newCanWriteAndIsPublic)
       {
-        ComparerResult.AddChangedFlag("Setter", ReferenceType.CanWrite, Severities.PropertySetterChanged);
+          if (referenceCanWriteAndIsPublic)
+          {
+              ComparerResult.AddRemovedItem(ResultContext.Property, ReferenceType.Name, Severities.PropertySetterRemoved);
+          }
+          else
+          {
+              ComparerResult.AddAddedItem(ResultContext.Property, ReferenceType.Name, Severities.PropertySetterAdded);
+          }
       }
-      if ((ReferenceType.CanRead && ReferenceType.GetMethod.IsPublic) != (NewType.CanRead && NewType.GetMethod.IsPublic))
+      bool referenceCanReadAndIsPublic = ReferenceType.CanRead && ReferenceType.GetMethod.IsPublic;
+      bool newCanReadAndIsPublic = NewType.CanRead && NewType.GetMethod.IsPublic;
+      if (referenceCanReadAndIsPublic != newCanReadAndIsPublic)
       {
-        ComparerResult.AddChangedFlag("Getter", ReferenceType.CanRead, Severities.PropertyGetterChanged);
+          if (referenceCanReadAndIsPublic)
+          {
+              ComparerResult.AddRemovedItem(ResultContext.Property, ReferenceType.Name, Severities.PropertyGetterRemoved);
+          }
+          else
+          {
+              ComparerResult.AddAddedItem(ResultContext.Property, ReferenceType.Name, Severities.PropertyGetterAdded);
+          }
       }
       bool referenceStatic = (ReferenceType.GetMethod != null && ReferenceType.GetMethod.IsStatic) || (ReferenceType.SetMethod != null && ReferenceType.SetMethod.IsStatic);
       bool newStatic = (NewType.GetMethod != null && NewType.GetMethod.IsStatic) || (NewType.SetMethod != null && NewType.SetMethod.IsStatic);

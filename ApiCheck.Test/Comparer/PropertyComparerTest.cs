@@ -27,8 +27,8 @@ namespace ApiCheck.Test.Comparer
       Assembly assembly2 = ApiBuilder.CreateApi().Class().Property("MyProp", typeof(int), hasGetter: false).Build().Build();
       Mock<IComparerResult> sut = new Builder(assembly1, assembly2).ComparerResultMock;
 
-      sut.Verify(result => result.AddChangedFlag("Setter", false, Severity.Error), Times.Once);
-      sut.Verify(result => result.AddChangedFlag("Getter", true, Severity.Error), Times.Once);
+      sut.Verify(result => result.AddAddedItem(ResultContext.Property, "MyProp", Severity.Warning), Times.Once);
+      sut.Verify(result => result.AddRemovedItem(ResultContext.Property, "MyProp", Severity.Error), Times.Once);
     }
 
     [Test]
@@ -62,7 +62,8 @@ namespace ApiCheck.Test.Comparer
       Assembly assembly2 = ApiBuilder.CreateApi().Class().Property("MyProp", typeof(int), true, setterInternal: true).Build().Build();
       Mock<IComparerResult> sut = new Builder(assembly1, assembly2).ComparerResultMock;
 
-      sut.Verify(result => result.AddChangedFlag("Setter", It.IsAny<bool>(), Severity.Error), Times.Never);
+      sut.Verify(result => result.AddAddedItem(ResultContext.Property, "MyProp", Severity.Warning), Times.Never);
+      sut.Verify(result => result.AddRemovedItem(ResultContext.Property, "MyProp", Severity.Error), Times.Never);
     }
 
     [Test]
@@ -72,7 +73,109 @@ namespace ApiCheck.Test.Comparer
       Assembly assembly2 = ApiBuilder.CreateApi().Class().Property("MyProp", typeof(int), hasGetter: true, getterInternal: true).Build().Build();
       Mock<IComparerResult> sut = new Builder(assembly1, assembly2).ComparerResultMock;
 
-      sut.Verify(result => result.AddChangedFlag("Getter", It.IsAny<bool>(), Severity.Error), Times.Never);
+      sut.Verify(result => result.AddAddedItem(ResultContext.Property, "MyProp", Severity.Warning), Times.Never);
+      sut.Verify(result => result.AddRemovedItem(ResultContext.Property, "MyProp", Severity.Error), Times.Never);
+    }
+
+    [Test]
+    public void When_adding_public_setter_should_report_warning()
+    {
+        Assembly assembly1 = ApiBuilder.CreateApi().Class().Property("MyProp", typeof(int), hasSetter: false, hasGetter: true).Build().Build();
+        Assembly assembly2 = ApiBuilder.CreateApi().Class().Property("MyProp", typeof(int), hasSetter: true, hasGetter: true).Build().Build();
+        Mock<IComparerResult> sut = new Builder(assembly1, assembly2).ComparerResultMock;
+
+        sut.Verify(result => result.AddAddedItem(ResultContext.Property, "MyProp", Severity.Warning), Times.Once);
+    }
+
+    [Test]
+    public void When_adding_public_getter_should_report_warning()
+    {
+        Assembly assembly1 = ApiBuilder.CreateApi().Class().Property("MyProp", typeof(int), hasSetter: true, hasGetter: false).Build().Build();
+        Assembly assembly2 = ApiBuilder.CreateApi().Class().Property("MyProp", typeof(int), hasSetter: true, hasGetter: true).Build().Build();
+        Mock<IComparerResult> sut = new Builder(assembly1, assembly2).ComparerResultMock;
+
+        sut.Verify(result => result.AddAddedItem(ResultContext.Property, "MyProp", Severity.Warning), Times.Once);
+    }
+
+    [Test]
+    public void When_removing_public_setter_should_report_error()
+    {
+        Assembly assembly1 = ApiBuilder.CreateApi().Class().Property("MyProp", typeof(int), hasSetter: true, hasGetter: true).Build().Build();
+        Assembly assembly2 = ApiBuilder.CreateApi().Class().Property("MyProp", typeof(int), hasSetter: false, hasGetter: true).Build().Build();
+        Mock<IComparerResult> sut = new Builder(assembly1, assembly2).ComparerResultMock;
+
+        sut.Verify(result => result.AddRemovedItem(ResultContext.Property, "MyProp", Severity.Error), Times.Once);
+    }
+
+
+    [Test]
+    public void When_removing_public_getter_should_report_error()
+    {
+        Assembly assembly1 = ApiBuilder.CreateApi().Class().Property("MyProp", typeof(int), hasSetter:true, hasGetter: true).Build().Build();
+        Assembly assembly2 = ApiBuilder.CreateApi().Class().Property("MyProp", typeof(int), hasSetter:true, hasGetter: false).Build().Build();
+        Mock<IComparerResult> sut = new Builder(assembly1, assembly2).ComparerResultMock;
+
+        sut.Verify(result => result.AddRemovedItem(ResultContext.Property, "MyProp", Severity.Error), Times.Once);
+    }
+
+    [Test]
+    public void When_removing_private_setter_should_not_report_error()
+    {
+        Assembly assembly1 = ApiBuilder.CreateApi().Class().Property("MyProp", typeof(int), hasSetter: true, setterInternal: true, hasGetter: true).Build().Build();
+        Assembly assembly2 = ApiBuilder.CreateApi().Class().Property("MyProp", typeof(int), hasSetter: false, hasGetter: true).Build().Build();
+        Mock<IComparerResult> sut = new Builder(assembly1, assembly2).ComparerResultMock;
+
+        sut.Verify(result => result.AddRemovedItem(ResultContext.Property, "MyProp", Severity.Error), Times.Never);
+    }
+
+    [Test]
+    public void When_removing_private_getter_should_not_report_error()
+    {
+        Assembly assembly1 = ApiBuilder.CreateApi().Class().Property("MyProp", typeof(int), hasSetter: true, hasGetter: true, getterInternal: true).Build().Build();
+        Assembly assembly2 = ApiBuilder.CreateApi().Class().Property("MyProp", typeof(int), hasSetter: true, hasGetter: false).Build().Build();
+        Mock<IComparerResult> sut = new Builder(assembly1, assembly2).ComparerResultMock;
+
+        sut.Verify(result => result.AddRemovedItem(ResultContext.Property, "MyProp", Severity.Error), Times.Never);
+    }
+
+    [Test]
+    public void When_making_public_setter_internal_should_report_error()
+    {
+        Assembly assembly1 = ApiBuilder.CreateApi().Class().Property("MyProp", typeof(int), hasSetter: true, hasGetter: true).Build().Build();
+        Assembly assembly2 = ApiBuilder.CreateApi().Class().Property("MyProp", typeof(int), hasSetter: true, setterInternal:true, hasGetter: true).Build().Build();
+        Mock<IComparerResult> sut = new Builder(assembly1, assembly2).ComparerResultMock;
+
+        sut.Verify(result => result.AddRemovedItem(ResultContext.Property, "MyProp", Severity.Error), Times.Once);
+    }
+
+    [Test]
+    public void When_making_public_getter_internal_should_report_error()
+    {
+        Assembly assembly1 = ApiBuilder.CreateApi().Class().Property("MyProp", typeof(int), hasSetter: true, hasGetter: true).Build().Build();
+        Assembly assembly2 = ApiBuilder.CreateApi().Class().Property("MyProp", typeof(int), hasSetter: true, setterInternal: true, hasGetter: true).Build().Build();
+        Mock<IComparerResult> sut = new Builder(assembly1, assembly2).ComparerResultMock;
+
+        sut.Verify(result => result.AddRemovedItem(ResultContext.Property, "MyProp", Severity.Error), Times.Once);
+    }
+
+    [Test]
+    public void When_making_internal_setter_public_should_report_warning()
+    {
+        Assembly assembly1 = ApiBuilder.CreateApi().Class().Property("MyProp", typeof(int), hasSetter: true, setterInternal: true, hasGetter: true).Build().Build();
+        Assembly assembly2 = ApiBuilder.CreateApi().Class().Property("MyProp", typeof(int), hasSetter: true, hasGetter: true).Build().Build();
+        Mock<IComparerResult> sut = new Builder(assembly1, assembly2).ComparerResultMock;
+
+        sut.Verify(result => result.AddAddedItem(ResultContext.Property, "MyProp", Severity.Warning), Times.Once);
+    }
+
+    [Test]
+    public void When_making_internal_getter_public_should_report_warning()
+    {
+        Assembly assembly1 = ApiBuilder.CreateApi().Class().Property("MyProp", typeof(int), hasSetter: true, hasGetter: true, getterInternal: true).Build().Build();
+        Assembly assembly2 = ApiBuilder.CreateApi().Class().Property("MyProp", typeof(int), hasSetter: true, hasGetter: true).Build().Build();
+        Mock<IComparerResult> sut = new Builder(assembly1, assembly2).ComparerResultMock;
+
+        sut.Verify(result => result.AddAddedItem(ResultContext.Property, "MyProp", Severity.Warning), Times.Once);
     }
 
     private class Builder

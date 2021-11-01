@@ -129,8 +129,12 @@ out changed | public int A(out int i) { } | public int A(ref int i) { } | Error
 Description | Before | After | Severity
 ----------- | ------ | ----- | --------
 property type changed | public int A {get; set;} | public string A {get;set;} | Error
-property setter changed | public int A {get; set;} | public int A {get;} | Error
-property getter changed | public int A {get; set;} | public int A {set;} | Error
+property setter changed | public int A {get;} | public int A {get; set;} | Warning
+property getter changed | public int A {set;} | public int A {get; set;} | Warning
+property setter removed | public int A {get; set;} | public int A {get;} | Error
+property getter removed | public int A {get; set;} | public int A {set;} | Error
+property setter removed | public int A {get; set;} | public int A {get;private set;} | Error
+property getter removed | public int A {get; set;} | public int A {private get;set;} | Error
 static property changed | public static int A {get; set;} | public int A {ret; set;} | Error
 event type changed | public event DelegateType MyEvent | public event NewDelegateType MyEvent | Error
 static event changed | public static event DelegateType MyEvent | public event DelegateType MyEvent | Error

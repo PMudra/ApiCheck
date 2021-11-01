@@ -1,4 +1,6 @@
 ﻿
+using System;
+
 namespace ApiCheck.Test.Project.AttributesChanged
 {
 #if VERSION1
