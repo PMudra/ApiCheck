@@ -18,26 +18,31 @@ namespace ApiCheck.Comparer
       {
         ComparerResult.AddChangedProperty("Type", ReferenceType.PropertyType.GetCompareableName(), NewType.PropertyType.GetCompareableName(), Severities.PropertyTypeChanged);
       }
-      if ((ReferenceType.CanWrite && ReferenceType.SetMethod.IsPublic) != (NewType.CanWrite && NewType.SetMethod.IsPublic))
+
+      bool referenceCanWriteAndIsPublic = ReferenceType.CanWrite && ReferenceType.SetMethod.IsPublic;
+      bool newCanWriteAndIsPublic = NewType.CanWrite && NewType.SetMethod.IsPublic;
+      if (referenceCanWriteAndIsPublic != newCanWriteAndIsPublic)
       {
-          if (ReferenceType.CanWrite && ReferenceType.SetMethod.IsPublic)
+          if (referenceCanWriteAndIsPublic)
           {
               ComparerResult.AddRemovedItem(ResultContext.Property, ReferenceType.Name, Severities.PropertySetterRemoved);
           }
           else
           {
-              ComparerResult.AddChangedFlag("Setter", ReferenceType.CanWrite, Severities.PropertySetterChanged);
+              ComparerResult.AddAddedItem(ResultContext.Property, ReferenceType.Name, Severities.PropertySetterAdded);
           }
       }
-      if ((ReferenceType.CanRead && ReferenceType.GetMethod.IsPublic) != (NewType.CanRead && NewType.GetMethod.IsPublic))
+      bool referenceCanReadAndIsPublic = ReferenceType.CanRead && ReferenceType.GetMethod.IsPublic;
+      bool newCanReadAndIsPublic = NewType.CanRead && NewType.GetMethod.IsPublic;
+      if (referenceCanReadAndIsPublic != newCanReadAndIsPublic)
       {
-          if (ReferenceType.CanRead && ReferenceType.GetMethod.IsPublic)
+          if (referenceCanReadAndIsPublic)
           {
               ComparerResult.AddRemovedItem(ResultContext.Property, ReferenceType.Name, Severities.PropertyGetterRemoved);
           }
           else
           {
-              ComparerResult.AddChangedFlag("Getter", ReferenceType.CanRead, Severities.PropertyGetterChanged);
+              ComparerResult.AddAddedItem(ResultContext.Property, ReferenceType.Name, Severities.PropertyGetterAdded);
           }
       }
       bool referenceStatic = (ReferenceType.GetMethod != null && ReferenceType.GetMethod.IsStatic) || (ReferenceType.SetMethod != null && ReferenceType.SetMethod.IsStatic);

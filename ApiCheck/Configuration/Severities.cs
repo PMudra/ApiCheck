@@ -46,9 +46,9 @@ namespace ApiCheck.Configuration
       OutChanged = Severity.Error;
 
       PropertyTypeChanged = Severity.Error;
-      PropertySetterChanged = Severity.Warning;
+      PropertySetterAdded = Severity.Warning;
       PropertySetterRemoved = Severity.Error;
-      PropertyGetterChanged = Severity.Warning;
+      PropertyGetterAdded = Severity.Warning;
       PropertyGetterRemoved = Severity.Error;
       StaticPropertyChanged = Severity.Error;
 
@@ -101,9 +101,9 @@ namespace ApiCheck.Configuration
 
     public Severity PropertyTypeChanged { get; set; }
     
-    public Severity PropertySetterChanged { get; set; }
+    public Severity PropertySetterAdded { get; set; }
     public Severity PropertySetterRemoved { get; set; }
-    public Severity PropertyGetterChanged { get; set; }
+    public Severity PropertyGetterAdded { get; set; }
     public Severity PropertyGetterRemoved { get; set; }
     public Severity StaticPropertyChanged { get; set; }
 
