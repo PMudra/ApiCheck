@@ -28,7 +28,9 @@ namespace ApiCheck.Comparer
         // compare numeric enum values
         object referenceValue = ReferenceType.GetRawConstantValue();
         object newValue = NewType.GetRawConstantValue();
-        if (Convert.ToInt32(referenceValue) != Convert.ToInt32(newValue))
+        Type enumBaseType = ReferenceType.FieldType.GetEnumUnderlyingType();
+
+        if (!Convert.ChangeType(referenceValue, enumBaseType).Equals(Convert.ChangeType(newValue, enumBaseType)))
         {
           ComparerResult.AddChangedProperty("Value", referenceValue.ToString(), newValue.ToString(), Severities.ConstEnumValueChanged);
         }

@@ -23,10 +23,26 @@ namespace ApiCheck.Comparer
 
     private void CompareDefaultValue()
     {
-      if (!Equals(ReferenceType.RawDefaultValue, NewType.RawDefaultValue))
+      if (!Equals(GetDefaultValue(ReferenceType), GetDefaultValue(NewType)))
       {
         ComparerResult.AddChangedProperty("Default Value", (ReferenceType.RawDefaultValue ?? "null").ToString(), (NewType.RawDefaultValue ?? "null").ToString(), Severities.DefaultValueChanged);
       }
+    }
+
+    private object GetDefaultValue(ParameterInfo parameter)
+    {
+
+      if (parameter.ParameterType == typeof(DateTime) && (parameter.Attributes & ParameterAttributes.HasDefault) != ParameterAttributes.None)
+      {
+        return DateTime.MinValue;
+      }
+
+      if (parameter.ParameterType == typeof(Guid) && (parameter.Attributes & ParameterAttributes.HasDefault) != ParameterAttributes.None)
+      {
+        return Guid.Empty;
+      }
+
+      return parameter.RawDefaultValue;
     }
 
     private void CompareName()
