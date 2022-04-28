@@ -32,12 +32,12 @@ namespace ApiCheck.Comparer
     private object GetDefaultValue(ParameterInfo parameter)
     {
 
-      if (parameter.ParameterType == typeof(DateTime) && (parameter.Attributes & ParameterAttributes.HasDefault) != ParameterAttributes.None)
+      if (parameter.ParameterType == typeof(DateTime) && parameter.Attributes.HasFlag(ParameterAttributes.HasDefault))
       {
         return DateTime.MinValue;
       }
 
-      if (parameter.ParameterType == typeof(Guid) && (parameter.Attributes & ParameterAttributes.HasDefault) != ParameterAttributes.None)
+      if (parameter.ParameterType == typeof(Guid) && parameter.Attributes.HasFlag(ParameterAttributes.HasDefault))
       {
         return Guid.Empty;
       }
