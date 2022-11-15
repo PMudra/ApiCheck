@@ -1,4 +1,4 @@
-﻿  using ApiCheck.Result.Difference;
+﻿using ApiCheck.Result.Difference;
 
 namespace ApiCheck.Configuration
 {
@@ -100,7 +100,7 @@ namespace ApiCheck.Configuration
     public Severity OutChanged { get; set; }
 
     public Severity PropertyTypeChanged { get; set; }
-    
+
     public Severity PropertySetterAdded { get; set; }
     public Severity PropertySetterRemoved { get; set; }
     public Severity PropertyGetterAdded { get; set; }

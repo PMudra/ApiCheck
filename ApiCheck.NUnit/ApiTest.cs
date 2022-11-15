@@ -8,13 +8,15 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using ApiCheck.Configuration;
+using NUnit.Framework.Interfaces;
+using System.Runtime.CompilerServices;
+using System.Reflection;
 
 namespace ApiCheck.NUnit
 {
-  public abstract class ApiTest
+  public static class ApiTest
   {
-    [Test, TestCaseSource("TestCases")]
-    public void ApiElementTest(bool success, string message)
+    public static void ApiElementTest(bool success, string message)
     {
       if (success)
       {
@@ -26,19 +28,11 @@ namespace ApiCheck.NUnit
       }
     }
 
-    public IEnumerable<ITestCaseData> TestCases
-    {
-      get
-      {
-        return GetTestCaseData(GetResults());
-      }
-    }
-
-    private IEnumerable<ApiTestData> GetResults()
+    public static IEnumerable<ApiTestData> GetResults(Type type)
     {
       using (AssemblyLoader assemblyLoader = new AssemblyLoader())
       {
-        object[] customAttributes = GetType().GetCustomAttributes(typeof(ApiTestAttribute), true);
+        object[] customAttributes = type.GetCustomAttributes(typeof(ApiTestAttribute), true);
         if (customAttributes.Length == 0)
         {
           throw new Exception(string.Format("The test class should define the {0} at least once", typeof(ApiTestAttribute)));
@@ -47,11 +41,11 @@ namespace ApiCheck.NUnit
         {
           ApiTestAttribute apiTestAttribute = (ApiTestAttribute)customAttribute;
 
-          Stream comparerConfigurationStream = GetReadStream(apiTestAttribute.ComparerConfigurationPath);
+          Stream comparerConfigurationStream = GetReadStream(Path.GetFullPath(apiTestAttribute.ComparerConfigurationPath, Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)));
           ComparerConfiguration comparerConfiguration = ConfigurationLoader.LoadComparerConfiguration(comparerConfigurationStream);
 
-          ApiComparer apiComparer = ApiComparer.CreateInstance(assemblyLoader.ReflectionOnlyLoad(apiTestAttribute.ReferenceVersionPath),
-                                                               assemblyLoader.ReflectionOnlyLoad(apiTestAttribute.NewVersionPath))
+          ApiComparer apiComparer = ApiComparer.CreateInstance(assemblyLoader.ReflectionOnlyLoad(Path.GetFullPath(apiTestAttribute.ReferenceVersionPath, Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location))),
+                                                               assemblyLoader.ReflectionOnlyLoad(Path.GetFullPath(apiTestAttribute.NewVersionPath, Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location))))
                                                                .WithComparerConfiguration(comparerConfiguration)
                                                                .Build();
           apiComparer.CheckApi();
@@ -65,7 +59,7 @@ namespace ApiCheck.NUnit
       return string.IsNullOrEmpty(path) ? null : new FileStream(path, FileMode.Open, FileAccess.Read);
     }
 
-    private static IEnumerable<ITestCaseData> GetTestCaseData(IEnumerable<ApiTestData> results)
+    public static IEnumerable<ITestCaseData> GetTestCaseData(IEnumerable<ApiTestData> results)
     {
       List<ITestCaseData> testCaseData = new List<ITestCaseData>();
       IEnumerable<ApiTestData> apiTestData = results.ToList();
@@ -81,7 +75,7 @@ namespace ApiCheck.NUnit
       TestCaseData testCaseData = new TestCaseData(!fail, GetFailMessage(comparerResult)).SetName(comparerResult.Name).SetCategory(apiTestData.Category);
       if (apiTestData.Explicit)
       {
-        testCaseData.MakeExplicit("Set explicit by ApiTestAttribute");
+        testCaseData.Explicit("Set explicit by ApiTestAttribute");
       }
       return testCaseData;
     }
@@ -119,7 +113,7 @@ namespace ApiCheck.NUnit
       return element.HasElements ? element : null;
     }
 
-    private class ApiTestData
+    public class ApiTestData
     {
       public ApiTestData(IComparerResult comparerResult, string category, bool @explicit, bool handleWarningsAsErrors)
       {

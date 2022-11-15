@@ -1,14 +1,14 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32929.385
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{3459CD24-DC82-4C2E-827B-E2F4C765EB65}"
 	ProjectSection(SolutionItems) = preProject
 		.nuget\NuGet.Config = .nuget\NuGet.Config
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiCheck", "ApiCheck\ApiCheck.csproj", "{F49950B4-E611-4270-A3AF-372B58238CE4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiCheck", "ApiCheck\ApiCheck.csproj", "{F49950B4-E611-4270-A3AF-372B58238CE4}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{2551DCB9-50D0-4284-A1D3-6E07763AAB16}"
 	ProjectSection(SolutionItems) = preProject
@@ -23,13 +23,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		SolutionInfo.cs = SolutionInfo.cs
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiCheck.Console", "ApiCheck.Console\ApiCheck.Console.csproj", "{F9C40E89-D2DB-40A6-914B-F1B6A39F32A0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiCheck.Console", "ApiCheck.Console\ApiCheck.Console.csproj", "{F9C40E89-D2DB-40A6-914B-F1B6A39F32A0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiCheck.NUnit", "ApiCheck.NUnit\ApiCheck.NUnit.csproj", "{2581B896-3388-4188-BF02-2A463227646F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiCheck.NUnit", "ApiCheck.NUnit\ApiCheck.NUnit.csproj", "{2581B896-3388-4188-BF02-2A463227646F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiCheck.Test", "ApiCheck.Test\ApiCheck.Test.csproj", "{40720D6A-FA8A-48C5-AF17-9DC65666947D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiCheck.Test", "ApiCheck.Test\ApiCheck.Test.csproj", "{40720D6A-FA8A-48C5-AF17-9DC65666947D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiCheck.Test.Project", "ApiCheck.Test.Project\ApiCheck.Test.Project.csproj", "{F36CEDC6-9583-4FEB-B7FE-016D0131604A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiCheck.Test.Project", "ApiCheck.Test.Project\ApiCheck.Test.Project.csproj", "{F36CEDC6-9583-4FEB-B7FE-016D0131604A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -72,5 +72,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5E69EF9D-6179-490C-BA8E-C6F56F653BBB}
 	EndGlobalSection
 EndGlobal

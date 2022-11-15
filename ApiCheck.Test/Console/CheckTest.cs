@@ -2,6 +2,7 @@
 using NUnit.Framework;
 using System;
 using System.IO;
+using System.Reflection;
 
 namespace ApiCheck.Test.Console
 {
@@ -32,10 +33,14 @@ namespace ApiCheck.Test.Console
 
     private static class Builder
     {
-      public static Check Create(string referencePath = @"TestProject\Version1\ApiCheckTestProject.dll", string newPath = @"TestProject\Version2\ApiCheckTestProject.dll",
-                                string htmlPath = null, string xmlPath = null, string configPath = null, bool verbose = false)
+      public static Check Create(string referencePath = @"TestProject\Version1\ApiCheckTestProject.dll",
+          string newPath = @"TestProject\Version2\ApiCheckTestProject.dll",
+          string htmlPath = null, string xmlPath = null, string configPath = null, bool verbose = false)
       {
-        return new Check(referencePath, newPath, htmlPath, xmlPath, configPath, verbose);
+        var fullReferencePath = Path.GetFullPath(referencePath, Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
+        var fullNewPath = Path.GetFullPath(newPath, Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
+
+        return new Check(fullReferencePath, fullNewPath, htmlPath, xmlPath, configPath, verbose);
       }
     }
   }

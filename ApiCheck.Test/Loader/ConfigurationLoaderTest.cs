@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Reflection;
 using System.Text;
 using ApiCheck.Configuration;
 using ApiCheck.Loader;
@@ -78,7 +79,7 @@ namespace ApiCheck.Test.Loader
     [Test]
     public void When_reading_example_configuration_should_load_configuration()
     {
-      string document = File.ReadAllText(@"TestProvider\ExampleConfiguration.txt");
+      string document = File.ReadAllText(Path.GetFullPath(@"TestProvider\ExampleConfiguration.txt", Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)));
       Stream stream = new Builder(document).Stream;
 
       ComparerConfiguration configuration = ConfigurationLoader.LoadComparerConfiguration(stream);

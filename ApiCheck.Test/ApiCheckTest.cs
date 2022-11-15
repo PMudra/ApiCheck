@@ -64,8 +64,8 @@ namespace ApiCheck.Test
     {
       Stream htmlReport = new MemoryStream();
       Stream xmlReport = new MemoryStream();
-      Assembly newAssembly = Assembly.ReflectionOnlyLoadFrom(@"TestProject\Version2\ApiCheckTestProject.dll");
-      Assembly referenceAssembly = Assembly.ReflectionOnlyLoadFrom(@"TestProject\Version1\ApiCheckTestProject.dll");
+      Assembly newAssembly = Assembly.LoadFile(Path.GetFullPath(@"TestProject\Version2\ApiCheckTestProject.dll", Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)));
+      Assembly referenceAssembly = Assembly.LoadFile(Path.GetFullPath(@"TestProject\Version1\ApiCheckTestProject.dll", Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)));
       int logCount = 0;
 
       int returnValue = -1;

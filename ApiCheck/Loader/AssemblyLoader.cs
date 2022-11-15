@@ -15,21 +15,21 @@ namespace ApiCheck.Loader
     {
       AppDomain.CurrentDomain.ReflectionOnlyAssemblyResolve -= CurrentDomainOnReflectionOnlyAssemblyResolve;
     }
-    
+
     private Assembly CurrentDomainOnReflectionOnlyAssemblyResolve(object sender, ResolveEventArgs args)
     {
       AssemblyName assemblyName = new AssemblyName(args.Name);
       string path = Path.Combine(Path.GetDirectoryName(args.RequestingAssembly.Location), assemblyName.Name + ".dll");
       if (File.Exists(path))
       {
-        return Assembly.ReflectionOnlyLoadFrom(path);
+        return Assembly.LoadFile(path);
       }
       return Assembly.ReflectionOnlyLoad(AppDomain.CurrentDomain.ApplyPolicy(args.Name));
     }
 
     public Assembly ReflectionOnlyLoad(string path)
     {
-      return Assembly.ReflectionOnlyLoadFrom(path);
+      return Assembly.LoadFile(Path.GetFullPath(path));
     }
   }
 }
