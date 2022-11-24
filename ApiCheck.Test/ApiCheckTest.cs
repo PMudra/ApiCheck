@@ -3,6 +3,7 @@ using NUnit.Framework;
 using System;
 using System.IO;
 using System.Reflection;
+using ApiCheck.Loader;
 
 namespace ApiCheck.Test
 {
@@ -64,8 +65,9 @@ namespace ApiCheck.Test
     {
       Stream htmlReport = new MemoryStream();
       Stream xmlReport = new MemoryStream();
-      Assembly newAssembly = Assembly.LoadFile(Path.GetFullPath(@"TestProject\Version2\ApiCheckTestProject.dll", Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)));
-      Assembly referenceAssembly = Assembly.LoadFile(Path.GetFullPath(@"TestProject\Version1\ApiCheckTestProject.dll", Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)));
+      using AssemblyLoader assemblyLoader = new AssemblyLoader();
+      Assembly newAssembly = assemblyLoader.ReflectionOnlyLoad(@"TestProject\Version2\ApiCheckTestProject.dll");
+      Assembly referenceAssembly = assemblyLoader.ReflectionOnlyLoad(@"TestProject\Version1\ApiCheckTestProject.dll");
       int logCount = 0;
 
       int returnValue = -1;
