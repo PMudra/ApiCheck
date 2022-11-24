@@ -17,7 +17,7 @@ namespace ApiCheck.Console
 
     public Check(string referencePath, string newPath, string htmlPath, string xmlPath, string configPath, bool verbose)
     {
-      using (var assemblyLoader = new AssemblyLoader())
+      using (AssemblyLoader assemblyLoader = new AssemblyLoader())
       {
         _referenceAssembly = assemblyLoader.ReflectionOnlyLoad(referencePath);
         _newAssembly = assemblyLoader.ReflectionOnlyLoad(newPath);
