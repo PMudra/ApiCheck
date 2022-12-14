@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Reflection;
 using System.Text;
 using ApiCheck.Configuration;
 using ApiCheck.Loader;

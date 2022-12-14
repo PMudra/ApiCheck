@@ -18,7 +18,7 @@ namespace ApiCheck.Test.Builder
         Version = Version.Parse(version),
         CultureInfo = CultureInfo.CreateSpecificCulture(culture),
       };
-      _assemblyBuilder = AppDomain.CurrentDomain.DefineDynamicAssembly(assemblyName, AssemblyBuilderAccess.Run);
+      _assemblyBuilder = AssemblyBuilder.DefineDynamicAssembly(assemblyName, AssemblyBuilderAccess.Run);
       _moduleBuilder = _assemblyBuilder.DefineDynamicModule("MyModule");
     }
 
@@ -44,7 +44,7 @@ namespace ApiCheck.Test.Builder
 
     public ApiBuilder Enum(string name = "MyEnum", Tuple<string, int>[] values = null)
     {
-      var enumBuilder = _moduleBuilder.DefineEnum(name, TypeAttributes.Public, typeof (int));
+      var enumBuilder = _moduleBuilder.DefineEnum(name, TypeAttributes.Public, typeof(int));
       if (values != null)
       {
         foreach (var val in values)

@@ -1,15 +1,34 @@
-#r @"packages\FAKE\tools\FakeLib.dll"
+#if FAKE
+#r "paket:
+nuget FSharp.Core 6.0.0.0
+nuget MSBuild.StructuredLogger
+nuget Microsoft.Build.Framework 17.3
+nuget Fake.DotNet
+nuget Fake.DotNet.AssemblyInfoFile
+nuget Fake.DotNet.Cli
+nuget Fake.DotNet.MSBuild
+nuget Fake.DotNet.Testing.NUnit
+nuget Fake.IO.FileSystem
+nuget Fake.IO.Zip
+nuget Fake.Core.Target //"
+#endif
+#load ".fake/build.fsx/intellisense.fsx"
+
 open Fake
-open Fake.AssemblyInfoFile
+open Fake.DotNet
+open Fake.IO
+open Fake.IO.FileSystemOperators
+open Fake.IO.Globbing.Operators //enables !! and globbing
+open Fake.Core
+open Fake.DotNet.Testing
 
-RestorePackages()
+let buildDir  = __SOURCE_DIRECTORY__ @@ @".\build\"
+let testDir  = __SOURCE_DIRECTORY__ @@ @".\test\"
+let deployDir = __SOURCE_DIRECTORY__ @@ @".\deploy\"
+let packagingDir = __SOURCE_DIRECTORY__ @@ @".\packaging\"
 
-let buildDir  = @".\build\"
-let deployDir = @".\deploy\"
-let packagingDir = @".\packaging\"
-
-let buildVersion = if isLocalBuild then "0" else buildVersion
-let version = "1.1." + buildVersion
+let buildVersion = if BuildServer.isLocalBuild then "0" else BuildServer.buildVersion
+let version = "2.0." + buildVersion
 
 let authors = ["ise Individuelle Software-Entwicklung GmbH"]
 let releaseNotes = "Initial Release."
@@ -20,64 +39,78 @@ let globalDescription = "Library comparing different versions of an api using re
 let packages =
     [ "ApiCheck", globalDescription, ["YamlDotNet.Signed", "4.2.1"]
       "ApiCheck.Console", globalDescription + " Console application.", []
-      "ApiCheck.NUnit", globalDescription + " NUnit integration.", ["ApiCheck", version; "NUnit", "2.6.4"] ]
+      "ApiCheck.NUnit", globalDescription + " NUnit integration.", ["ApiCheck", version; "NUnit", "3.13.3"] ]
 
-Target "Clean" (fun _ ->
-    CleanDirs [buildDir; deployDir; packagingDir]
+Target.create "Clean" (fun _ ->
+    Shell.cleanDirs [buildDir; deployDir; packagingDir]
 )
 
-Target "SetVersion" (fun _ ->
-    CreateCSharpAssemblyInfo @".\SolutionInfo.cs"
-        [Attribute.FileVersion version
-         Attribute.Version version]
+Target.create "SetVersion" (fun _ ->
+    AssemblyInfoFile.createCSharp @".\SolutionInfo.cs"
+        [AssemblyInfo.FileVersion version
+         AssemblyInfo.Version version]
 )
 
-Target "Compile" (fun _ ->
+Target.create "RestorePackages" (fun _ ->
+    "./ApiCheck.sln"
+    |> NuGet.Restore.RestoreMSSolutionPackages id
+)
+
+Target.create "Compile" (fun _ ->
     !! @"ApiCheck.sln"
-    |> MSBuildRelease buildDir "Build"
-    |> Log "Compile-Output: "
+    |> MSBuild.runRelease 
+        (fun p ->
+            { p with Properties = [ "BaseOutputPath", buildDir ] } )
+        "" "Build"
+    |> Trace.logItems "Compile-Output: "
 )
 
-Target "CompileTest" (fun _ ->
+Target.create "CompileTest" (fun _ ->
     !! @"**\ApiCheck.Test.csproj"
-    |> MSBuildDebug buildDir "Build"
-    |> Log "CompileTest-Output: "
+    |> MSBuild.runDebug
+        (fun p ->
+            { p with Properties = [ "BaseOutputPath", testDir ] } )
+        "" "Build"
+    |> Trace.logItems "CompileTest-Output: "
 )
 
-Target "RunTest" (fun _ ->
-    !! (buildDir @@ @"*Test.dll")
-    |> NUnit (fun p ->
+Target.create "RunTest" (fun _ ->
+    !! (testDir @@ @"**\*Test.dll")
+    |> NUnit3.run (fun p ->
         {p with
-            DisableShadowCopy = true;
-            OutputFile = buildDir @@ @"TestResults.xml"})
+            ShadowCopy = false
+            OutputDir = buildDir @@ @"TestResults.xml"})
 )
 
-Target "Zip" (fun _ ->
+Target.create "Zip" (fun _ ->
     !! (buildDir @@ "**\*")
-    |> Zip buildDir (deployDir @@ "ApiCheck." + version + ".zip")
+    |> Zip.zip buildDir (deployDir @@ "ApiCheck." + version + ".zip")
 )
 
-Target "NuGet" (fun _ ->
+Target.create "NuGet" (fun _ ->
     for package, description, dependencies in packages do
-        let libDir = packagingDir @@ "lib"
-        let toolDir = packagingDir @@ "tools"
-        CleanDirs [libDir; toolDir]
-        !! (buildDir @@ "*.txt") |> CopyFiles packagingDir
+        let buildDirNet6 = buildDir @@ "Release" @@ "net6.0"
+        let libDir = packagingDir @@ "lib" @@ "netstandard2.0" 
+        let toolDirNet6 = packagingDir @@ "tools" @@ "net6.0"
+        Shell.cleanDirs [libDir; toolDirNet6]
+        !! (buildDirNet6 @@ "*.txt") |> Shell.copyFiles packagingDir
         match package with
         | "ApiCheck" ->
-            CopyFile libDir (buildDir @@ "ApiCheck.dll")
-            CopyFile libDir (buildDir @@ "ApiCheck.XML")
+            Shell.copyFile libDir (buildDirNet6 @@ "ApiCheck.dll")
+            Shell.copyFile libDir (buildDirNet6 @@ "ApiCheck.XML")
         | "ApiCheck.NUnit" ->
-            CopyFile libDir (buildDir @@ "ApiCheck.NUnit.dll")
-            CopyFile libDir (buildDir @@ "ApiCheck.NUnit.XML")
+            Shell.copyFile libDir (buildDirNet6 @@ "ApiCheck.NUnit.dll")
+            Shell.copyFile libDir (buildDirNet6 @@ "ApiCheck.NUnit.XML")
         | "ApiCheck.Console" ->
-            CopyFile toolDir (buildDir @@ "ApiCheck.dll")
-            CopyFile toolDir (buildDir @@ "ApiCheck.Console.exe")
-            CopyFile toolDir (buildDir @@ "ApiCheck.Console.exe.config")
-            CopyFile toolDir (buildDir @@ "CommandLine.dll")
-            CopyFile toolDir (buildDir @@ "YamlDotNet.dll")
+            Shell.copyFile toolDirNet6 (buildDirNet6 @@ "ApiCheck.dll")
+            Shell.copyFile toolDirNet6 (buildDirNet6 @@ "ApiCheck.Console.exe")
+            Shell.copyFile toolDirNet6 (buildDirNet6 @@ "ApiCheck.Console.dll")
+            Shell.copyFile toolDirNet6 (buildDirNet6 @@ "ApiCheck.Console.deps.json")
+            Shell.copyFile toolDirNet6 (buildDirNet6 @@ "ApiCheck.Console.runtimeconfig.json")
+            Shell.copyFile toolDirNet6 (buildDirNet6 @@ "CommandLine.dll")
+            Shell.copyFile toolDirNet6 (buildDirNet6 @@ "YamlDotNet.dll")
         | _ -> ()
-        NuGet (fun p ->
+        NuGet.NuGet.NuGet (fun p ->
             {p with
                 WorkingDir = packagingDir
                 OutputPath = deployDir
@@ -93,10 +126,15 @@ Target "NuGet" (fun _ ->
                 "ApiCheck.nuspec"
 )
 
-Target "Default" DoNothing
+open Fake.Core.TargetOperators
+
+Target.create "Default" (fun _ ->
+    Trace.trace "Starting Default target..."
+)
 
 "Clean"
     ==> "SetVersion"
+    ==> "RestorePackages"
     ==> "Compile"
     ==> "CompileTest"
     ==> "RunTest"
@@ -104,4 +142,4 @@ Target "Default" DoNothing
     ==> "NuGet"
     ==> "Default"
 
-RunTargetOrDefault "Default"
+Target.runOrDefault "Default"

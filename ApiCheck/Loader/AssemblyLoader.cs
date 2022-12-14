@@ -1,35 +1,64 @@
 using System;
 using System.IO;
+using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
 
 namespace ApiCheck.Loader
 {
   public sealed class AssemblyLoader : IDisposable
   {
-    public AssemblyLoader()
+    private readonly MetadataLoadContext _metadataLoadContext;
+
+    public AssemblyLoader(string path)
     {
-      AppDomain.CurrentDomain.ReflectionOnlyAssemblyResolve += CurrentDomainOnReflectionOnlyAssemblyResolve;
+      _metadataLoadContext = GetMetadataLoadContext(path);
     }
 
     public void Dispose()
     {
-      AppDomain.CurrentDomain.ReflectionOnlyAssemblyResolve -= CurrentDomainOnReflectionOnlyAssemblyResolve;
-    }
-    
-    private Assembly CurrentDomainOnReflectionOnlyAssemblyResolve(object sender, ResolveEventArgs args)
-    {
-      AssemblyName assemblyName = new AssemblyName(args.Name);
-      string path = Path.Combine(Path.GetDirectoryName(args.RequestingAssembly.Location), assemblyName.Name + ".dll");
-      if (File.Exists(path))
-      {
-        return Assembly.ReflectionOnlyLoadFrom(path);
-      }
-      return Assembly.ReflectionOnlyLoad(AppDomain.CurrentDomain.ApplyPolicy(args.Name));
+      _metadataLoadContext?.Dispose();
     }
 
-    public Assembly ReflectionOnlyLoad(string path)
+    public Assembly GetAssembly(string path)
     {
-      return Assembly.ReflectionOnlyLoadFrom(path);
+      return _metadataLoadContext.LoadFromAssemblyPath(Path.GetFullPath(path));
     }
+
+    private MetadataLoadContext GetMetadataLoadContext(string path)
+    {
+      var allAssemblies = Directory.GetFiles(RuntimeEnvironment.GetRuntimeDirectory(), "*.dll").ToList();
+
+      if (PathIsDirectory(path) == true)
+      {
+        allAssemblies.AddRange(Directory.GetFiles(path, "*.dll"));
+      }
+      else if (PathIsDirectory(path) == false)
+      {
+        allAssemblies.Add(path);
+      }
+
+      var resolver = new PathAssemblyResolver(allAssemblies);
+      var mlc = new MetadataLoadContext(resolver);
+
+      return mlc;
+    }
+
+    private static bool? PathIsDirectory(string path)
+    {
+      if (File.Exists(path))
+      {
+        return false;
+      }
+      else if (Directory.Exists(path))
+      {
+        return true;
+      }
+      else
+      {
+        return null;
+      }
+    }
+
   }
 }

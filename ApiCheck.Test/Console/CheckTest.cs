@@ -33,7 +33,7 @@ namespace ApiCheck.Test.Console
     private static class Builder
     {
       public static Check Create(string referencePath = @"TestProject\Version1\ApiCheckTestProject.dll", string newPath = @"TestProject\Version2\ApiCheckTestProject.dll",
-                                string htmlPath = null, string xmlPath = null, string configPath = null, bool verbose = false)
+        string htmlPath = null, string xmlPath = null, string configPath = null, bool verbose = false)
       {
         return new Check(referencePath, newPath, htmlPath, xmlPath, configPath, verbose);
       }
