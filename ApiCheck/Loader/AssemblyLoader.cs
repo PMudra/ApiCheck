@@ -44,7 +44,7 @@ namespace ApiCheck.Loader
       return mlc;
     }
 
-    public static bool? PathIsDirectory(string path)
+    private static bool? PathIsDirectory(string path)
     {
       if (File.Exists(path))
       {
