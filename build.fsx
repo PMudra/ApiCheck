@@ -90,11 +90,9 @@ Target.create "Zip" (fun _ ->
 Target.create "NuGet" (fun _ ->
     for package, description, dependencies in packages do
         let buildDirNet6 = buildDir @@ "Release" @@ "net6.0"
-        let buildDirNet472 = buildDir @@ "Release" @@ "net472"
         let libDir = packagingDir @@ "lib" @@ "netstandard2.0" 
         let toolDirNet6 = packagingDir @@ "tools" @@ "net6.0"
-        let toolDirNet472 = packagingDir @@ "tools" @@ "net472"
-        Shell.cleanDirs [libDir; toolDirNet6; toolDirNet472]
+        Shell.cleanDirs [libDir; toolDirNet6]
         !! (buildDirNet6 @@ "*.txt") |> Shell.copyFiles packagingDir
         match package with
         | "ApiCheck" ->
@@ -106,16 +104,11 @@ Target.create "NuGet" (fun _ ->
         | "ApiCheck.Console" ->
             Shell.copyFile toolDirNet6 (buildDirNet6 @@ "ApiCheck.dll")
             Shell.copyFile toolDirNet6 (buildDirNet6 @@ "ApiCheck.Console.exe")
+            Shell.copyFile toolDirNet6 (buildDirNet6 @@ "ApiCheck.Console.dll")
             Shell.copyFile toolDirNet6 (buildDirNet6 @@ "ApiCheck.Console.deps.json")
             Shell.copyFile toolDirNet6 (buildDirNet6 @@ "ApiCheck.Console.runtimeconfig.json")
             Shell.copyFile toolDirNet6 (buildDirNet6 @@ "CommandLine.dll")
             Shell.copyFile toolDirNet6 (buildDirNet6 @@ "YamlDotNet.dll")
-
-            Shell.copyFile toolDirNet472 (buildDirNet472 @@ "ApiCheck.dll")
-            Shell.copyFile toolDirNet472 (buildDirNet472 @@ "ApiCheck.Console.exe")
-            Shell.copyFile toolDirNet472 (buildDirNet472 @@ "ApiCheck.Console.exe.config")
-            Shell.copyFile toolDirNet472 (buildDirNet472 @@ "CommandLine.dll")
-            Shell.copyFile toolDirNet472 (buildDirNet472 @@ "YamlDotNet.dll")
         | _ -> ()
         NuGet.NuGet.NuGet (fun p ->
             {p with
