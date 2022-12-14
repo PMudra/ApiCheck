@@ -6,10 +6,12 @@ using ApiCheck.Configuration;
 
 namespace ApiCheck.Console
 {
-  internal class Check
+  internal class Check : IDisposable
   {
     private readonly Action<string> _log;
     private readonly ComparerConfiguration _comparerConfiguration;
+    private readonly AssemblyLoader _referenceAssemblyLoader;
+    private readonly AssemblyLoader _newAssemblyLoader;
     private readonly Assembly _referenceAssembly;
     private readonly Assembly _newAssembly;
     private readonly Stream _xmlStream;
@@ -17,11 +19,12 @@ namespace ApiCheck.Console
 
     public Check(string referencePath, string newPath, string htmlPath, string xmlPath, string configPath, bool verbose)
     {
-      using (AssemblyLoader assemblyLoader = new AssemblyLoader())
-      {
-        _referenceAssembly = assemblyLoader.ReflectionOnlyLoad(referencePath);
-        _newAssembly = assemblyLoader.ReflectionOnlyLoad(newPath);
-      }
+      _referenceAssemblyLoader = new AssemblyLoader(referencePath);
+      _newAssemblyLoader = new AssemblyLoader(newPath);
+
+      _referenceAssembly = _referenceAssemblyLoader.GetAssembly(referencePath);
+      _newAssembly = _newAssemblyLoader.GetAssembly(newPath);
+
       _htmlStream = GetWriteStream(htmlPath);
       _xmlStream = GetWriteStream(xmlPath);
       _comparerConfiguration = ConfigurationLoader.LoadComparerConfiguration(GetReadStream(configPath));
@@ -47,6 +50,12 @@ namespace ApiCheck.Console
     private static Stream GetReadStream(string path)
     {
       return string.IsNullOrEmpty(path) ? null : new FileStream(path, FileMode.Open, FileAccess.Read);
+    }
+
+    public void Dispose()
+    {
+      _referenceAssemblyLoader?.Dispose();
+      _newAssemblyLoader?.Dispose();
     }
   }
 }

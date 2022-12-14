@@ -36,27 +36,31 @@ namespace ApiCheck.NUnit
 
     private IEnumerable<ApiTestData> GetResults(IMethodInfo method)
     {
-      using (AssemblyLoader assemblyLoader = new AssemblyLoader())
+      ApiTestAttribute[] customAttributes = method.TypeInfo.GetCustomAttributes<ApiTestAttribute>(true);
+      if (customAttributes.Length == 0)
       {
-        ApiTestAttribute[] customAttributes = method.TypeInfo.GetCustomAttributes<ApiTestAttribute>(true);
-        if (customAttributes.Length == 0)
-        {
-          throw new Exception(string.Format("The test class should define the {0} at least once", typeof(ApiTestAttribute)));
-        }
+        throw new Exception(string.Format("The test class should define the {0} at least once", typeof(ApiTestAttribute)));
+      }
 
-        foreach (ApiTestAttribute apiTestAttribute in customAttributes)
-        {
-          Stream comparerConfigurationStream = GetReadStream(apiTestAttribute.ComparerConfigurationPath);
-          ComparerConfiguration comparerConfiguration = ConfigurationLoader.LoadComparerConfiguration(comparerConfigurationStream);
+      foreach (ApiTestAttribute apiTestAttribute in customAttributes)
+      {
+        Stream comparerConfigurationStream = GetReadStream(apiTestAttribute.ComparerConfigurationPath);
+        ComparerConfiguration comparerConfiguration = ConfigurationLoader.LoadComparerConfiguration(comparerConfigurationStream);
 
-          ApiComparer apiComparer = ApiComparer.CreateInstance(assemblyLoader.ReflectionOnlyLoad(apiTestAttribute.ReferenceVersionPath),
-              assemblyLoader.ReflectionOnlyLoad(apiTestAttribute.NewVersionPath))
-            .WithComparerConfiguration(comparerConfiguration)
-            .Build();
-          apiComparer.CheckApi();
-          yield return new ApiTestData(apiComparer.ComparerResult, apiTestAttribute.Category, apiTestAttribute.Explicit,
-            apiTestAttribute.HandleWarningsAsErrors);
-        }
+        using var referenceLoader = new AssemblyLoader(apiTestAttribute.ReferenceVersionPath);
+        using var newLoader = new AssemblyLoader(apiTestAttribute.NewVersionPath);
+
+        ApiComparer apiComparer = ApiComparer
+          .CreateInstance(
+            referenceLoader.GetAssembly(apiTestAttribute.ReferenceVersionPath),
+            newLoader.GetAssembly(apiTestAttribute.NewVersionPath))
+          .WithComparerConfiguration(comparerConfiguration)
+          .Build();
+
+        apiComparer.CheckApi();
+
+        yield return new ApiTestData(apiComparer.ComparerResult, apiTestAttribute.Category, apiTestAttribute.Explicit,
+          apiTestAttribute.HandleWarningsAsErrors);
       }
     }
 

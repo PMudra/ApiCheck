@@ -65,9 +65,10 @@ namespace ApiCheck.Test
     {
       Stream htmlReport = new MemoryStream();
       Stream xmlReport = new MemoryStream();
-      using AssemblyLoader assemblyLoader = new AssemblyLoader();
-      Assembly newAssembly = assemblyLoader.ReflectionOnlyLoad(@"TestProject\Version2\ApiCheckTestProject.dll");
-      Assembly referenceAssembly = assemblyLoader.ReflectionOnlyLoad(@"TestProject\Version1\ApiCheckTestProject.dll");
+      using AssemblyLoader referenceLoader = new AssemblyLoader(@"TestProject\Version1\ApiCheckTestProject.dll");
+      using AssemblyLoader newLoader = new AssemblyLoader(@"TestProject\Version2\ApiCheckTestProject.dll");
+      Assembly referenceAssembly = referenceLoader.GetAssembly(@"TestProject\Version1\ApiCheckTestProject.dll");
+      Assembly newAssembly = newLoader.GetAssembly(@"TestProject\Version2\ApiCheckTestProject.dll");
       int logCount = 0;
 
       int returnValue = -1;

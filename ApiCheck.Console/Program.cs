@@ -34,7 +34,10 @@ namespace ApiCheck.Console
 
       try
       {
-        returnValue = new Check(options.ReferencePath, options.NewPath, options.HtmlPath, options.XmlPath, options.ConfigPath, options.Verbose).CheckAssemblies();
+        using (var check = new Check(options.ReferencePath, options.NewPath, options.HtmlPath, options.XmlPath, options.ConfigPath, options.Verbose))
+        {
+          returnValue = check.CheckAssemblies();
+        }
       }
       catch (Exception exception)
       {
