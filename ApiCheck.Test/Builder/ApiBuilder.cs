@@ -42,9 +42,9 @@ namespace ApiCheck.Test.Builder
       return ApiTypeBuilder.Type(this, name, TypeAttributes.Interface | TypeAttributes.Public | TypeAttributes.Abstract, null, interfaces);
     }
 
-    public ApiBuilder Enum(string name = "MyEnum", Tuple<string, int>[] values = null)
+    public ApiBuilder Enum<T>(string name = "MyEnum", Tuple<string, T>[] values = null)
     {
-      var enumBuilder = _moduleBuilder.DefineEnum(name, TypeAttributes.Public, typeof(int));
+      var enumBuilder = _moduleBuilder.DefineEnum(name, TypeAttributes.Public, typeof(T));
       if (values != null)
       {
         foreach (var val in values)

@@ -4,6 +4,7 @@ using ApiCheck.Result.Difference;
 using ApiCheck.Test.Builder;
 using Moq;
 using NUnit.Framework;
+using System;
 using System.Reflection;
 
 namespace ApiCheck.Test.Comparer
@@ -28,7 +29,7 @@ namespace ApiCheck.Test.Comparer
       Assembly assembly1 = ApiBuilder.CreateApi()
         .Class("Class1").Build()
         .AbstractClass("Abstract1").Build()
-        .Enum("Enum1")
+        .Enum<int>("Enum1")
         .Interface("Interface1").Build()
         .Build();
       Assembly assembly2 = ApiBuilder.CreateApi().Build();
@@ -46,7 +47,7 @@ namespace ApiCheck.Test.Comparer
       Assembly assembly1 = ApiBuilder.CreateApi()
         .Class("Class1").Build()
         .AbstractClass("Abstract1").Build()
-        .Enum("Enum1")
+        .Enum<int>("Enum1")
         .Interface("Interface1").Build()
         .Build();
       Assembly assembly2 = ApiBuilder.CreateApi().Build();

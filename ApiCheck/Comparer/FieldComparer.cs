@@ -28,11 +28,17 @@ namespace ApiCheck.Comparer
         // compare numeric enum values
         object referenceValue = ReferenceType.GetRawConstantValue();
         object newValue = NewType.GetRawConstantValue();
-        Type enumBaseType = ReferenceType.FieldType.GetEnumUnderlyingType();
+        Type referenceEnumBaseType = ReferenceType.FieldType.GetEnumUnderlyingType();
+        Type newEnumBaseType = NewType.FieldType.GetEnumUnderlyingType();
 
-        if (!Convert.ChangeType(referenceValue, enumBaseType).Equals(Convert.ChangeType(newValue, enumBaseType)))
+        if (!referenceValue.Equals(newValue))
         {
           ComparerResult.AddChangedProperty("Value", referenceValue.ToString(), newValue.ToString(), Severities.ConstEnumValueChanged);
+        }
+
+        if (referenceEnumBaseType.GetCompareableName() != newEnumBaseType.GetCompareableName())
+        {
+          ComparerResult.AddChangedProperty("EnumBaseType", referenceEnumBaseType.ToString(), newEnumBaseType.ToString(), Severities.ConstEnumValueChanged);
         }
       }
       return ComparerResult;

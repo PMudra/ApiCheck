@@ -69,6 +69,17 @@ namespace ApiCheck.Test.Comparer
         sut.Verify(result => result.AddRemovedItem(It.IsAny<ResultContext>(), It.IsAny<string>(), It.IsAny<Severity>()), Times.Never);
     }
 
+    [Test]
+    public void When_comparing_enum_types_with_different_type_should_report()
+    {
+      Assembly assembly1 = ApiBuilder.CreateApi().Enum("MyEnum", new[] { Tuple.Create("Value1", 1) }).Build();
+      Assembly assembly2 = ApiBuilder.CreateApi().Enum("MyEnum", new[] { Tuple.Create("Value1", (byte)1) }).Build();
+      Mock<IComparerResult> sut = new Builder(assembly1, assembly2).ComparerResultMock;
+
+      sut.Verify(result => result.AddChangedProperty("Value", It.IsAny<string>(), It.IsAny<string>(), Severity.Error), Times.Once);
+      sut.Verify(result => result.AddChangedProperty("EnumBaseType", It.IsAny<string>(), It.IsAny<string>(), Severity.Error), Times.Once);
+    }
+
     private class Builder
     {
       private readonly Mock<IComparerResult> _comparerResultMock;
