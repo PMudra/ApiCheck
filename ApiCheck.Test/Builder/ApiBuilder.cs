@@ -56,6 +56,20 @@ namespace ApiCheck.Test.Builder
       return this;
     }
 
+    public ApiBuilder Enum(string name = "MyEnum", Tuple<string, byte>[] values = null)
+    {
+      var enumBuilder = _moduleBuilder.DefineEnum(name, TypeAttributes.Public, typeof(byte));
+      if (values != null)
+      {
+        foreach (var val in values)
+        {
+          enumBuilder.DefineLiteral(val.Item1, val.Item2);
+        }
+      }
+      enumBuilder.CreateType();
+      return this;
+    }
+
     internal ModuleBuilder ModuleBuilder
     {
       get { return _moduleBuilder; }

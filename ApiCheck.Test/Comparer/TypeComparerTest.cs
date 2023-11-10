@@ -18,7 +18,7 @@ namespace ApiCheck.Test.Comparer
     public void When_class_is_changed_to_enum_changed_attributes_are_reported()
     {
       Assembly assembly1 = ApiBuilder.CreateApi().Class("Class").Build().Build();
-      Assembly assembly2 = ApiBuilder.CreateApi().Enum("Class").Build();
+      Assembly assembly2 = ApiBuilder.CreateApi().Enum("Class", new[] { Tuple.Create("Value1", 1) }).Build();
       var sut = new Builder(assembly1, assembly2).ComparerResultMock;
       sut.Verify(result => result.AddChangedFlag("Enum", false, Severity.Error), Times.Once);
       sut.Verify(result => result.AddChangedFlag("Sealed", false, Severity.Error), Times.Once);
