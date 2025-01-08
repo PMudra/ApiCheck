@@ -37,7 +37,7 @@ let tags = "ApiCheck Assembly Comparer NUnit Different Version Build Integration
 let globalDescription = "Library comparing different versions of an api using reflection to ensure compatibility with third party components."
 
 let packages =
-    [ "ApiCheck", globalDescription, ["YamlDotNet.Signed", "4.2.1"]
+    [ "ApiCheck", globalDescription, ["YamlDotNet", "16.3.0"]
       "ApiCheck.Console", globalDescription + " Console application.", []
       "ApiCheck.NUnit", globalDescription + " NUnit integration.", ["ApiCheck", version; "NUnit", "3.13.3"] ]
 
