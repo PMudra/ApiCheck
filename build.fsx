@@ -1,12 +1,9 @@
 #if FAKE
 #r "paket:
-nuget FSharp.Core 6.0.0.0
-nuget MSBuild.StructuredLogger
-nuget Microsoft.Build.Framework 17.3
+nuget FSharp.Core
 nuget Fake.DotNet
 nuget Fake.DotNet.AssemblyInfoFile
 nuget Fake.DotNet.Cli
-nuget Fake.DotNet.MSBuild
 nuget Fake.DotNet.Testing.NUnit
 nuget Fake.IO.FileSystem
 nuget Fake.IO.Zip
@@ -20,10 +17,8 @@ open Fake.IO
 open Fake.IO.FileSystemOperators
 open Fake.IO.Globbing.Operators //enables !! and globbing
 open Fake.Core
-open Fake.DotNet.Testing
 
 let buildDir  = __SOURCE_DIRECTORY__ @@ @".\build\"
-let testDir  = __SOURCE_DIRECTORY__ @@ @".\test\"
 let deployDir = __SOURCE_DIRECTORY__ @@ @".\deploy\"
 let packagingDir = __SOURCE_DIRECTORY__ @@ @".\packaging\"
 
@@ -52,34 +47,32 @@ Target.create "SetVersion" (fun _ ->
 )
 
 Target.create "RestorePackages" (fun _ ->
-    "./ApiCheck.sln"
-    |> NuGet.Restore.RestoreMSSolutionPackages id
+    DotNet.restore id "./ApiCheck.sln"
 )
 
 Target.create "Compile" (fun _ ->
-    !! @"ApiCheck.sln"
-    |> MSBuild.runRelease 
-        (fun p ->
-            { p with Properties = [ "BaseOutputPath", buildDir ] } )
-        "" "Build"
-    |> Trace.logItems "Compile-Output: "
+    DotNet.build (fun p -> 
+        { p with 
+            Configuration = DotNet.BuildConfiguration.Release
+            Common.CustomParams = Some ("/p:BaseOutputPath=" + buildDir) 
+        }) "./ApiCheck.sln"
 )
 
 Target.create "CompileTest" (fun _ ->
-    !! @"**\ApiCheck.Test.csproj"
-    |> MSBuild.runDebug
-        (fun p ->
-            { p with Properties = [ "BaseOutputPath", testDir ] } )
-        "" "Build"
-    |> Trace.logItems "CompileTest-Output: "
+    DotNet.build (fun p -> 
+        { p with 
+            Configuration = DotNet.BuildConfiguration.Debug
+            Common.CustomParams = Some ("/p:BaseOutputPath=" + buildDir) 
+        }) "./ApiCheck.sln"
 )
 
 Target.create "RunTest" (fun _ ->
-    !! (testDir @@ @"**\*Test.dll")
-    |> NUnit3.run (fun p ->
-        {p with
-            ShadowCopy = false
-            OutputDir = buildDir @@ @"TestResults.xml"})
+    DotNet.test (fun p ->
+        { p with
+            NoBuild = true
+            Configuration = DotNet.BuildConfiguration.Debug
+            Common.CustomParams = Some ("/p:BaseOutputPath=" + buildDir) 
+        }) "./ApiCheck.sln" // or specify a .csproj file if needed
 )
 
 Target.create "Zip" (fun _ ->
